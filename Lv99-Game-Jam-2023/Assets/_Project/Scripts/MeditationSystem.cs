@@ -16,6 +16,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
     [NonSerialized] public bool IsPlayerMeditating = false;
     [NonSerialized] public MeditationPoint OverlappingMeditationPoint = null;
+    [NonSerialized] public MeditationPoint SelectedMeditationPoint = null;
 
     protected override void Awake()
     {
@@ -42,7 +43,22 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (context.performed == false)
             return;
 
-        if (OverlappingMeditationPoint != null)
-            IsPlayerMeditating = !IsPlayerMeditating;
+        if (IsPlayerMeditating)
+        {
+            IsPlayerMeditating = false;
+            SelectedMeditationPoint = null;
+
+            PlayerCharacterCamera.Instance?.DisableMeditationCamera();
+        }
+        else
+        {
+            if (OverlappingMeditationPoint == null)
+                return;
+
+            IsPlayerMeditating = true;
+            SelectedMeditationPoint = OverlappingMeditationPoint;
+
+            PlayerCharacterCamera.Instance?.EnableMeditationCamera(SelectedMeditationPoint);
+        }
     }
 }

@@ -29,9 +29,12 @@ public class InputPromptCanvas : MonoBehaviour
         bool _isMeditatePromptActive = false;
 
         var _meditateSystem = MeditationSystem.Instance;
-
         if (_meditateSystem != null && _meditateSystem.IsPlayerMeditating == false && _meditateSystem.OverlappingMeditationPoint != null)
             _isMeditatePromptActive = true;
+
+        var _playerCamera = PlayerCharacterCamera.Instance;
+        if (_playerCamera != null && _playerCamera.IsAnimating())
+            _isMeditatePromptActive = false;
 
         float _targetFontSize = _isMeditatePromptActive ? m_maxMeditateFontSize : 0f;
         float _speed = _isMeditatePromptActive ? m_meditatePromptAppearSpeed : m_meditatePromptDisappearSpeed;
