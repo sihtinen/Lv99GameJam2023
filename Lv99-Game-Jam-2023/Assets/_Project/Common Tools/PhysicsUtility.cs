@@ -22,7 +22,7 @@ public static class PhysicsUtility
         {
             if (m_groundLayerMaskInitialized == false)
             {
-                m_groundLayerMask = LayerMask.GetMask("StaticEnvironment");
+                m_groundLayerMask = LayerMask.GetMask("Default");
                 m_groundLayerMaskInitialized = true;
             }
 

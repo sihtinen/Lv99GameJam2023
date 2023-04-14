@@ -35,14 +35,14 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     private float m_jumpStartTime = 0f;
     private Vector3 m_currentHorizontalVelocity = Vector3.zero;
     private CharacterController m_characterController = null;
-
-    [NonSerialized] public List<MonoBehaviour> PreventMovementComponents = new();
+    private PlayerCharacter m_playerCharacter = null;
 
     protected override void Awake()
     {
         base.Awake();
 
         TryGetComponent(out m_characterController);
+        TryGetComponent(out m_playerCharacter);
 
         if (m_moveActionRef != null)
             m_moveActionRef.action.Enable();
@@ -57,6 +57,9 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     private void onJumpInput(InputAction.CallbackContext context)
     {
         if (context.performed == false)
+            return;
+
+        if (m_playerCharacter.AllowJump == false)
             return;
 
         if (m_characterController.isGrounded == false)
@@ -94,7 +97,7 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         var _moveInput = m_moveActionRef.action.ReadValue<Vector2>();
 
-        if (PreventMovementComponents.Count > 0)
+        if (m_playerCharacter.AllowMovement == false)
             _moveInput = Vector2.zero;
 
         float _targetAcceleration = m_characterController.isGrounded ? m_moveAcceleration_Ground : m_moveAcceleration_Air;
@@ -116,10 +119,22 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
             m_currentVerticalVelocity = Mathf.MoveTowards(m_currentVerticalVelocity, -m_maxFallVelocity, Time.deltaTime * m_fallAcceleration);
 
         Vector3 _moveVelocity = m_currentHorizontalVelocity + new Vector3(0f, m_currentVerticalVelocity, 0f);
+        Vector3 _nextMovePos = transform.position + Time.deltaTime * _moveVelocity;
+
+        if (m_characterController.isGrounded && _isJumping == false && hasGroundBelow(_nextMovePos) == false)
+        {
+            _moveVelocity.x = 0f;
+            _moveVelocity.z = 0f;
+        }
 
         m_wasGroundedPreviousFrame = m_characterController.isGrounded;
         m_characterController.Move(Time.deltaTime * _moveVelocity);
     }
 
     public bool IsGrounded => m_characterController.isGrounded;
+
+    private bool hasGroundBelow(Vector3 position)
+    {
+        return PhysicsUtility.GetGroundHit(position, startVerticalOffset: 0.5f).HitFound;
+    }
 }

@@ -53,8 +53,6 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
 
     private IEnumerator coroutine_meleeAttack()
     {
-        m_moveComponent.PreventMovementComponents.Add(this);
-
         bool _hitDealt = false;
         float _timer = 0f;
 
@@ -75,7 +73,6 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
             }
         }
 
-        m_moveComponent.PreventMovementComponents.Remove(this);
         m_meleeCoroutine = null;
     }
 
@@ -102,4 +99,6 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
                 _meleeTarget.OnHit(playerPosition: transform.position);
         }
     }
+
+    public bool IsMeleeAttacking() => m_meleeCoroutine != null;
 }
