@@ -36,6 +36,8 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     private Vector3 m_currentHorizontalVelocity = Vector3.zero;
     private CharacterController m_characterController = null;
 
+    [NonSerialized] public List<MonoBehaviour> PreventMovementComponents = new();
+
     protected override void Awake()
     {
         base.Awake();
@@ -92,8 +94,11 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         var _moveInput = m_moveActionRef.action.ReadValue<Vector2>();
 
+        if (PreventMovementComponents.Count > 0)
+            _moveInput = Vector2.zero;
+
         float _targetAcceleration = m_characterController.isGrounded ? m_moveAcceleration_Ground : m_moveAcceleration_Air;
-        float _targetDeceleration = m_characterController.isGrounded ? m_moveAcceleration_Air : m_moveDeceleration_Air;
+        float _targetDeceleration = m_characterController.isGrounded ? m_moveDeceleration_Ground : m_moveDeceleration_Air;
         float _finalAcceleration = _moveInput.magnitude > m_moveInputThreshold ? _targetAcceleration : _targetDeceleration;
 
         var _mainCameraForward = MainCameraComponent.Instance.HorizontalForwardDirection;
