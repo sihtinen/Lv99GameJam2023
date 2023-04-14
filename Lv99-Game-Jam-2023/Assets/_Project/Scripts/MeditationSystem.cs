@@ -115,7 +115,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             return;
 
         if (IsPlayerMeditating)
-            exitMeditation();
+            startMeditation();
         else
         {
             if (OverlappingMeditationPoint == null)
