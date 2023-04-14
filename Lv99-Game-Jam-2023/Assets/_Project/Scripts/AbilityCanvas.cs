@@ -61,4 +61,65 @@ public class AbilityCanvas : SingletonBehaviour<AbilityCanvas>
             m_activeSlots.Add(_newSlot);
         }
     }
+
+    public void AddAbilityElement(AbilityTypes abilityType)
+    {
+        for (int i = 0; i < m_activeSlots.Count; i++)
+        {
+            var _slot = m_activeSlots[i];
+
+            if (_slot.AbilityElementBinding == null)
+            {
+                var _newAbilityElement = m_abilityElementPool.Pop();
+                _newAbilityElement.BindToAbility(abilityType);
+                _slot.BindToAbilityElement(_newAbilityElement);
+                break;
+            }
+        }
+
+        reorderAbilityElements();
+    }
+
+    public void OnAbilityUsed(AbilityTypes abilityType)
+    {
+        for (int i = m_activeSlots.Count; i --> 0;)
+        {
+            var _slot = m_activeSlots[i];
+
+            if (_slot.AbilityElementBinding == null)
+                continue;
+
+            if (_slot.AbilityElementBinding.AbilityType == abilityType)
+            {
+                _slot.Clear();
+                m_activeSlots.RemoveAt(i);
+                break;
+            }
+        }
+    }
+
+    private void reorderAbilityElements()
+    {
+        for (int abilityIndex = 0; abilityIndex < 4; abilityIndex++)
+        {
+            for (int slotIndex = 0; slotIndex < m_activeSlots.Count; slotIndex++)
+            {
+                var _slot = m_activeSlots[slotIndex];
+
+                if (_slot.AbilityElementBinding == null)
+                    continue;
+
+                if (abilityIndex == (int)_slot.AbilityElementBinding.AbilityType)
+                    _slot.transform.SetAsLastSibling();
+            }
+        }
+
+        for (int slotIndex = 0; slotIndex < m_activeSlots.Count; slotIndex++)
+        {
+            var _slot = m_activeSlots[slotIndex];
+
+            if (_slot.AbilityElementBinding == null)
+                _slot.transform.SetAsLastSibling();
+        }
+    }
 }

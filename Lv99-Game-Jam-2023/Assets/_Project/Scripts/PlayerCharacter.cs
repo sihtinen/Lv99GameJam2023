@@ -14,10 +14,12 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
     [NonSerialized] public bool AllowJump = false;
     [NonSerialized] public bool AllowMelee = false;
 
+    [NonSerialized] public int JumpUses = 0;
+    [NonSerialized] public int MeleeUses = 0;
+
     private bool m_meditationLayersActive = false;
     private PlayerMoveComponent m_moveComponent = null;
     private PlayerMeleeComponent m_meleeComponent = null;
-
 
     protected override void Awake()
     {
@@ -30,8 +32,8 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
     private void Update()
     {
         AllowMovement = true;
-        AllowJump = true;
-        AllowMelee = true;
+        AllowJump = JumpUses > 0;
+        AllowMelee = MeleeUses > 0;
 
         if (m_moveComponent.IsGrounded == false)
         {
@@ -70,6 +72,25 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             if (m_meditationLayersActive && _playerCamera != null && _playerCamera.IsAnimating() == false)
                 disableMeditationCameraLayer();
         }
+    }
+
+    public void UseAbility(AbilityTypes abilityType)
+    {
+        switch (abilityType)
+        {
+            case AbilityTypes.Jump:
+                JumpUses--;
+                break;
+            case AbilityTypes.Melee:
+                MeleeUses--;
+                break;
+            case AbilityTypes.Ability3:
+                break;
+            case AbilityTypes.Ability4:
+                break;
+        }
+
+        AbilityCanvas.Instance?.OnAbilityUsed(abilityType);
     }
 
     private void enableMeditationCameraLayer()

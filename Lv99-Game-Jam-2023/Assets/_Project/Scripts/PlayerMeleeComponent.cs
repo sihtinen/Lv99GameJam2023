@@ -17,6 +17,7 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
     [Header("Object References")]
     [SerializeField] private InputActionReference m_meleeActionRef = null;
 
+    private PlayerCharacter m_playerCharacter = null;
     private PlayerMoveComponent m_moveComponent = null;
     private Coroutine m_meleeCoroutine = null;
 
@@ -24,11 +25,12 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
     {
         base.Awake();
 
+        TryGetComponent(out m_playerCharacter);
         TryGetComponent(out m_moveComponent);
 
         if (m_meleeActionRef != null)
         {
-            m_meleeActionRef.action.performed += this.onMeleeInput;
+            m_meleeActionRef.action.started += this.onMeleeInput;
             m_meleeActionRef.action.Enable();
         }
     }
@@ -37,18 +39,24 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
     {
         if (m_meleeActionRef != null)
         {
-            m_meleeActionRef.action.performed -= this.onMeleeInput;
+            m_meleeActionRef.action.started -= this.onMeleeInput;
             m_meleeActionRef.action.Disable();
         }
     }
 
     private void onMeleeInput(InputAction.CallbackContext context)
     {
+        if (m_playerCharacter.AllowMelee == false)
+            return;
+
         if (m_moveComponent.IsGrounded == false)
             return;
 
-        if (context.performed)
+        if (context.started)
+        {
+            m_playerCharacter.UseAbility(AbilityTypes.Melee);
             m_meleeCoroutine = StartCoroutine(coroutine_meleeAttack());
+        }
     }
 
     private IEnumerator coroutine_meleeAttack()

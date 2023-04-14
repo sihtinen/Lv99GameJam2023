@@ -18,6 +18,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [SerializeField] private InputActionReference m_breathActionRef = null;
 
     [NonSerialized] public bool IsPlayerMeditating = false;
+    [NonSerialized] public bool IsPlayerBreathingForAbility = false;
+    [NonSerialized] public AbilityTypes CurrentBreathAbility;
     [NonSerialized] public MeditationPoint OverlappingMeditationPoint = null;
     [NonSerialized] public MeditationPoint SelectedMeditationPoint = null;
 
@@ -29,19 +31,21 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
         if (m_jumpActionRef != null)
         {
-            m_jumpActionRef.action.performed += this.onJumpInput;
+            m_jumpActionRef.action.started += this.onJumpInput;
+            m_jumpActionRef.action.canceled += this.onJumpInput;
             m_jumpActionRef.action.Enable();
         }
 
         if (m_meleeActionRef != null)
         {
-            m_meleeActionRef.action.performed += this.onMeleeInput;
+            m_meleeActionRef.action.started += this.onMeleeInput;
+            m_meleeActionRef.action.canceled += this.onMeleeInput;
             m_meleeActionRef.action.Enable();
         }
 
         if (m_breathActionRef != null)
         {
-            m_breathActionRef.action.performed += this.onBreathInput;
+            m_breathActionRef.action.started += this.onBreathInput;
             m_breathActionRef.action.Enable();
         }
     }
@@ -50,19 +54,21 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     {
         if (m_jumpActionRef != null)
         {
-            m_jumpActionRef.action.performed -= this.onJumpInput;
+            m_jumpActionRef.action.started -= this.onJumpInput;
+            m_jumpActionRef.action.canceled -= this.onJumpInput;
             m_jumpActionRef.action.Disable();
         }
 
         if (m_meleeActionRef != null)
         {
-            m_meleeActionRef.action.performed -= this.onMeleeInput;
+            m_meleeActionRef.action.started -= this.onMeleeInput;
+            m_meleeActionRef.action.canceled -= this.onMeleeInput;
             m_meleeActionRef.action.Disable();
         }
 
         if (m_breathActionRef != null)
         {
-            m_breathActionRef.action.performed -= this.onBreathInput;
+            m_breathActionRef.action.started -= this.onBreathInput;
             m_breathActionRef.action.Disable();
         }
     }
@@ -72,14 +78,16 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (IsPlayerMeditating == false)
             return;
 
-        if (context.started)
-        {
+        if (m_isJumpAvailable == false)
+            return;
 
-        }
+        if (context.started)
+            startBreathForAbility(AbilityTypes.Jump);
 
         if (context.canceled)
         {
-
+            if (IsPlayerBreathingForAbility && CurrentBreathAbility == AbilityTypes.Jump)
+                endBreathForAbility();
         }
     }
 
@@ -88,20 +96,22 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (IsPlayerMeditating == false)
             return;
 
-        if (context.started)
-        {
+        if (m_isMeleeAvailable == false)
+            return;
 
-        }
+        if (context.started)
+            startBreathForAbility(AbilityTypes.Melee);
 
         if (context.canceled)
         {
-
+            if (IsPlayerBreathingForAbility && CurrentBreathAbility == AbilityTypes.Melee)
+                endBreathForAbility();
         }
     }
 
     private void onBreathInput(InputAction.CallbackContext context)
     {
-        if (context.performed == false)
+        if (context.started == false)
             return;
 
         if (IsPlayerMeditating)
@@ -118,6 +128,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     private void exitMeditation()
     {
         IsPlayerMeditating = false;
+        IsPlayerBreathingForAbility = false;
         SelectedMeditationPoint = null;
         PlayerCharacterCamera.Instance?.DisableMeditationCamera();
     }
@@ -127,6 +138,10 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         IsPlayerMeditating = true;
         SelectedMeditationPoint = OverlappingMeditationPoint;
         m_abilitiesSelected = 0;
+
+        var _player = PlayerCharacter.Instance;
+        _player.JumpUses = 0;
+        _player.MeleeUses = 0;
 
         AbilityCanvas.Instance?.Initialize(m_abilityCount);
 
@@ -140,5 +155,42 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
         if (m_isMeleeAvailable)
             _meditationScreen.EnableAbilitySelection(AbilityTypes.Melee);
+    }
+
+    private void startBreathForAbility(AbilityTypes abilityType)
+    {
+        IsPlayerBreathingForAbility = true;
+        CurrentBreathAbility = abilityType;
+    }
+
+    private void endBreathForAbility()
+    {
+        IsPlayerBreathingForAbility = false;
+
+        bool _isSuccess = true;
+
+        if (_isSuccess)
+        {
+            switch (CurrentBreathAbility)
+            {
+                case AbilityTypes.Jump:
+                    PlayerCharacter.Instance.JumpUses++;
+                    break;
+                case AbilityTypes.Melee:
+                    PlayerCharacter.Instance.MeleeUses++;
+                    break;
+                case AbilityTypes.Ability3:
+                    break;
+                case AbilityTypes.Ability4:
+                    break;
+            }
+
+            m_abilitiesSelected++;
+
+            AbilityCanvas.Instance.AddAbilityElement(CurrentBreathAbility);
+        }
+
+        if (m_abilitiesSelected >= m_abilityCount)
+            exitMeditation();
     }
 }

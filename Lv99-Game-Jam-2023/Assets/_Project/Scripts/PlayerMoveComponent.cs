@@ -49,14 +49,26 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         if (m_jumpActionRef != null)
         {
-            m_jumpActionRef.action.performed += this.onJumpInput;
+            m_jumpActionRef.action.started += this.onJumpInput;
             m_jumpActionRef.action.Enable();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (m_moveActionRef != null)
+            m_moveActionRef.action.Disable();
+
+        if (m_jumpActionRef != null)
+        {
+            m_jumpActionRef.action.started -= this.onJumpInput;
+            m_jumpActionRef.action.Disable();
         }
     }
 
     private void onJumpInput(InputAction.CallbackContext context)
     {
-        if (context.performed == false)
+        if (context.started == false)
             return;
 
         if (m_playerCharacter.AllowJump == false)
@@ -72,19 +84,9 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         m_currentVerticalVelocity = m_jumpVelocity;
         m_jumpStartTime = Time.time;
+        m_playerCharacter.UseAbility(AbilityTypes.Jump);
+
         OnJumped?.Invoke();
-    }
-
-    private void OnDestroy()
-    {
-        if (m_moveActionRef != null)
-            m_moveActionRef.action.Disable();
-
-        if (m_jumpActionRef != null)
-        {
-            m_jumpActionRef.action.performed -= this.onJumpInput;
-            m_jumpActionRef.action.Disable();
-        }
     }
 
     private void Update()
