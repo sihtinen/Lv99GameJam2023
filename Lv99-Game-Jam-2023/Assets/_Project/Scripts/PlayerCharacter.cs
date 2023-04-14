@@ -53,6 +53,8 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
 
             if (m_meditationLayersActive == false)
                 enableMeditationCameraLayer();
+
+            m_moveComponent.MoveTowards(_meditationSystem.SelectedMeditationPoint.PlayerMoveTarget);
         }
         else
         {

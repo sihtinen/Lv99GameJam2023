@@ -5,8 +5,14 @@ using UnityEngine;
 
 public class MeditationPoint : MonoBehaviour
 {
-    [Header("Camera Settings")]
-    [SerializeField] private Transform m_cameraDockTransform = null;
+    [Header("Object References")]
+    [SerializeField] private Transform m_cameraTargetIn = null;
+    [SerializeField] private Transform m_cameraTargetOut = null;
+    [SerializeField] private Transform m_playerMoveTarget = null;
+
+    public Transform CameraTargetIn => m_cameraTargetIn;
+    public Transform CameraTargetOut => m_cameraTargetOut;
+    public Transform PlayerMoveTarget => m_playerMoveTarget;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -31,15 +37,5 @@ public class MeditationPoint : MonoBehaviour
             if (_meditationSystem.OverlappingMeditationPoint == this)
                 _meditationSystem.OverlappingMeditationPoint = null;
         }
-    }
-
-    public Vector3 GetCameraTargetPosition()
-    {
-        return m_cameraDockTransform.position;
-    }
-
-    public Quaternion GetCameraTargetRotation()
-    {
-        return m_cameraDockTransform.rotation;
     }
 }

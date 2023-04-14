@@ -129,6 +129,16 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         m_wasGroundedPreviousFrame = m_characterController.isGrounded;
         m_characterController.Move(Time.deltaTime * _moveVelocity);
+
+        var _velocity = m_characterController.velocity;
+
+        if (_velocity.sqrMagnitude > 0.2f)
+        {
+            Vector3 _newForward = new Vector3(_velocity.x, 0f, _velocity.z).normalized;
+
+            if (_newForward != Vector3.zero)
+                transform.forward = _newForward;
+        }
     }
 
     public bool IsGrounded => m_characterController.isGrounded;
@@ -136,5 +146,14 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     private bool hasGroundBelow(Vector3 position)
     {
         return PhysicsUtility.GetGroundHit(position, startVerticalOffset: 0.5f).HitFound;
+    }
+
+    public void MoveTowards(Transform moveTarget)
+    {
+        Vector3 _newTargetPos = Vector3.Lerp(transform.position, moveTarget.position, Time.deltaTime * 5f);
+
+        m_characterController.Move(_newTargetPos - transform.position);
+
+        transform.rotation = Quaternion.Lerp(transform.rotation, moveTarget.rotation, Time.deltaTime * 20f);
     }
 }

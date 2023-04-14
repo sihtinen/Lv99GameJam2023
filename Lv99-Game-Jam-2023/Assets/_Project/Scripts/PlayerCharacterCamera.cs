@@ -7,6 +7,8 @@ public class PlayerCharacterCamera : SingletonBehaviour<PlayerCharacterCamera>
 {
     [Header("Settings")]
     [SerializeField] private Camera m_mainCamera = null;
+    [SerializeField] private float m_transitionLength_In = 2.0f;
+    [SerializeField] private float m_transitionLength_Out = 2.0f;
     [SerializeField] private AnimationCurve m_positionCurve = new AnimationCurve();
     [SerializeField] private AnimationCurve m_rotationCurve = new AnimationCurve();
 
@@ -36,8 +38,8 @@ public class PlayerCharacterCamera : SingletonBehaviour<PlayerCharacterCamera>
         if (m_currentMeditationPoint != null)
         {
             transform.SetPositionAndRotation(
-                Vector3.Lerp(m_mainCamera.transform.position, m_currentMeditationPoint.GetCameraTargetPosition(), m_positionCurve.Evaluate(m_cameraBlend)),
-                Quaternion.Lerp(m_mainCamera.transform.rotation, m_currentMeditationPoint.GetCameraTargetRotation(), m_rotationCurve.Evaluate(m_cameraBlend)));
+                Vector3.Lerp(m_currentMeditationPoint.CameraTargetOut.position, m_currentMeditationPoint.CameraTargetIn.position, m_positionCurve.Evaluate(m_cameraBlend)),
+                Quaternion.Lerp(m_currentMeditationPoint.CameraTargetOut.rotation, m_currentMeditationPoint.CameraTargetIn.rotation, m_rotationCurve.Evaluate(m_cameraBlend)));
         }
     }
 
@@ -67,7 +69,7 @@ public class PlayerCharacterCamera : SingletonBehaviour<PlayerCharacterCamera>
         while (m_cameraBlend < 1f)
         {
             yield return null;
-            m_cameraBlend += Time.deltaTime;
+            m_cameraBlend += Time.deltaTime / m_transitionLength_In;
         }
 
         m_cameraBlend = 1f;
@@ -79,7 +81,7 @@ public class PlayerCharacterCamera : SingletonBehaviour<PlayerCharacterCamera>
         while (m_cameraBlend > 0f)
         {
             yield return null;
-            m_cameraBlend -= Time.deltaTime;
+            m_cameraBlend -= Time.deltaTime / m_transitionLength_Out;
         }
 
         m_cameraBlend = 0f;
