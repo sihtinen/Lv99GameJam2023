@@ -40,7 +40,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             AllowMelee = false;
         }
 
-        if (m_meleeComponent.IsMeleeAttacking())
+        if (m_meleeComponent.IsMeleeAttacking)
         {
             AllowMovement = false;
             AllowJump = false;
@@ -95,13 +95,25 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
 
     private void enableMeditationCameraLayer()
     {
-        m_renderMeshRootObj.layer = LayerMask.NameToLayer("PlayerCharacter");
+        setRenderMeshLayer(LayerMask.NameToLayer("PlayerCharacter"));
         m_meditationLayersActive = true;
     }
 
     public void disableMeditationCameraLayer()
     {
-        m_renderMeshRootObj.layer = LayerMask.NameToLayer("Default");
+        setRenderMeshLayer(LayerMask.NameToLayer("Default"));
         m_meditationLayersActive = false;
+    }
+
+    private List<Transform> m_tempTransformList = new();
+
+    private void setRenderMeshLayer(int layer)
+    {
+        m_renderMeshRootObj.GetComponentsInChildren<Transform>(includeInactive: true, m_tempTransformList);
+
+        for (int i = 0; i < m_tempTransformList.Count; i++)
+            m_tempTransformList[i].gameObject.layer = layer;
+
+        m_tempTransformList.Clear();
     }
 }

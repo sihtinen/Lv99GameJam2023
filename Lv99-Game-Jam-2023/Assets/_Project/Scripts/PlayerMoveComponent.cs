@@ -144,6 +144,7 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     }
 
     public bool IsGrounded => m_characterController.isGrounded;
+    public bool IsRunning => IsGrounded && m_characterController.velocity.sqrMagnitude > 0.2f;
 
     private bool hasGroundBelow(Vector3 position)
     {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+[DefaultExecutionOrder(1)]
 public class PlayerCameraFollowTarget : MonoBehaviour
 {
     [SerializeField] private PlayerMoveComponent m_moveComponent = null;
@@ -19,6 +20,6 @@ public class PlayerCameraFollowTarget : MonoBehaviour
         if (m_moveComponent.IsGrounded == false && _movePos.y > transform.position.y)
             _movePos.y = transform.position.y;
 
-        transform.position = _movePos;
+        transform.SetPositionAndRotation(_movePos, m_moveComponent.transform.rotation);
     }
 }

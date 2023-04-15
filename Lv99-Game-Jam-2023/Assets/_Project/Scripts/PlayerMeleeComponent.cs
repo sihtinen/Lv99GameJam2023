@@ -17,6 +17,9 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
     [Header("Object References")]
     [SerializeField] private InputActionReference m_meleeActionRef = null;
 
+    [NonSerialized] public bool IsMeleeAttacking = false;
+    [NonSerialized] public float MeleeTime = 0f;
+
     private PlayerCharacter m_playerCharacter = null;
     private PlayerMoveComponent m_moveComponent = null;
     private Coroutine m_meleeCoroutine = null;
@@ -61,6 +64,9 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
 
     private IEnumerator coroutine_meleeAttack()
     {
+        IsMeleeAttacking = true;
+        MeleeTime = 0f;
+
         bool _hitDealt = false;
         float _timer = 0f;
 
@@ -69,18 +75,16 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
             yield return null;
             _timer += Time.deltaTime;
 
-            if (_hitDealt == false)
-            {
-                float _timePos = _timer / m_meleeDuration;
+            MeleeTime = _timer / m_meleeDuration;
 
-                if (_timePos >= m_meleeHitTimeNormalized)
-                {
-                    calculateHit();
-                    _hitDealt = true;
-                }
+            if (_hitDealt == false && MeleeTime >= m_meleeHitTimeNormalized)
+            {
+                calculateHit();
+                _hitDealt = true;
             }
         }
 
+        IsMeleeAttacking = false;
         m_meleeCoroutine = null;
     }
 
@@ -107,6 +111,4 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
                 _meleeTarget.OnHit(playerPosition: transform.position);
         }
     }
-
-    public bool IsMeleeAttacking() => m_meleeCoroutine != null;
 }
