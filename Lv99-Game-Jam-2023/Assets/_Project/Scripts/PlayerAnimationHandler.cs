@@ -9,10 +9,17 @@ public class PlayerAnimationHandler : MonoBehaviour
     [SerializeField] private string m_idleState = "Idle";
     [SerializeField] private string m_runState = "Run";
     [SerializeField] private string m_jumpState = "Jump";
+    [SerializeField] private string m_fallState = "Fall";
     [SerializeField] private string m_meleeState = "Hit";
     [SerializeField] private string m_meditateState = "Meditate";
 
+    [Header("Input Direction Tilt Rotate Settings")]
+    [SerializeField] private float m_inputLean_Forward = 10f;
+    [SerializeField] private float m_inputLean_Sideways = 25f;
+    [SerializeField] private float m_inputLean_Sharpness = 3f;
+
     private string m_currentAnimState = string.Empty;
+    private Quaternion m_inputRotation = Quaternion.identity;
 
     private Animator m_animator = null;
     private PlayerCharacter m_player = null;
@@ -40,7 +47,7 @@ public class PlayerAnimationHandler : MonoBehaviour
                 _state = m_runState;
         }
         else
-            _state = m_jumpState;
+            _state = m_moveComponent.CurrentVerticalVelocity > 0f ? m_jumpState : m_fallState;
 
         if (m_meleeComponent.IsMeleeAttacking)
         {
@@ -54,6 +61,25 @@ public class PlayerAnimationHandler : MonoBehaviour
             _state = m_meditateState;
 
         setAnimationState(_state);
+
+        updateInputDirectionRotate();
+    }
+
+    private void updateInputDirectionRotate()
+    {
+        transform.localRotation = Quaternion.identity;
+
+        var _targetRotation = Quaternion.identity;
+
+        if (allowInputRotate())
+        {
+            Vector3 _localInputVector = transform.InverseTransformVector(m_moveComponent.InputWorldDirection);
+            _targetRotation = Quaternion.Euler(_localInputVector.z * m_inputLean_Forward, 0f, -_localInputVector.x * m_inputLean_Sideways);
+        }
+
+        m_inputRotation = Quaternion.Lerp(m_inputRotation, _targetRotation, Time.deltaTime * m_inputLean_Sharpness);
+
+        transform.rotation = transform.rotation * m_inputRotation;
     }
 
     private void setAnimationState(string newAnimState)
@@ -75,5 +101,18 @@ public class PlayerAnimationHandler : MonoBehaviour
     private void setAnimatorTimeParameter(float time)
     {
         m_animator.SetFloat("MotionTime", time);
+    }
+
+    private bool allowInputRotate()
+    {
+        var _meditationSystem = MeditationSystem.Instance;
+
+        if (_meditationSystem != null && _meditationSystem.IsPlayerMeditating)
+            return false;
+
+        if (m_moveComponent.IsRunning == false)
+            return false;
+
+        return true;
     }
 }

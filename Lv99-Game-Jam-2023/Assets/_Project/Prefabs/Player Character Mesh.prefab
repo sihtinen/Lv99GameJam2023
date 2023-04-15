@@ -833,6 +833,7 @@ GameObject:
   - component: {fileID: 6562517089226127734}
   - component: {fileID: 1005026544969392908}
   - component: {fileID: 2496701061069727053}
+  - component: {fileID: 1912009931}
   m_Layer: 0
   m_Name: Player Character Mesh
   m_TagString: Untagged
@@ -890,6 +891,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cf8904ac7bccc24da9e501cded4f18d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_idleState: Idle
+  m_runState: Run
+  m_jumpState: Jump
+  m_fallState: Fall
+  m_meleeState: Hit
+  m_meditateState: Meditate
+--- !u!114 &1912009931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5789779919499207628}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2357a3c8d40d9074aaf97a98a2934832, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_maxVerticalVelocity: 8
+  m_verticalVelocity_HorizontalScaleOffset: -0.025
+  m_verticalVelocity_VerticalScaleOffset: 0.15
+  m_minLandingSquashVelocity: -0.5
+  m_landingSquashDuration: 0.5
+  m_landingSquash_HorizontalScaleOffset: 0.3
+  m_landingSquash_VerticalScaleOffset: -0.7
+  m_landingSquashCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 11.857431
+      outSlope: 11.857431
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.22919013
+    - serializedVersion: 3
+      time: 0.10126763
+      value: 0.6792423
+      inSlope: 3.3432455
+      outSlope: 3.3432455
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.051093515
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.0220004
+      outSlope: -0.0220004
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.15173064
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  m_moveComponent: {fileID: 0}
 --- !u!1 &6047242957256975337
 GameObject:
   m_ObjectHideFlags: 0

@@ -137,6 +137,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
         PreviousMeditationPoint.DeactivateMeditation();
 
+        PlayerMoveComponent.Instance?.ResetVerticalVelocity();
+
         PlayerCharacterCamera.Instance?.DisableMeditationCamera();
     }
 
