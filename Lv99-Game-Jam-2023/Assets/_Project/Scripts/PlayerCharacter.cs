@@ -56,7 +56,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             if (m_meditationLayersActive == false)
                 enableMeditationCameraLayer();
 
-            m_moveComponent.MoveTowards(_meditationSystem.SelectedMeditationPoint.PlayerMoveTarget);
+            m_moveComponent.MoveTowards(_meditationSystem.PreviousMeditationPoint.PlayerMoveTarget);
         }
         else
         {
@@ -115,5 +115,10 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             m_tempTransformList[i].gameObject.layer = layer;
 
         m_tempTransformList.Clear();
+    }
+
+    public bool HasAnyUsesLeft()
+    {
+        return JumpUses > 0 || MeleeUses > 0;
     }
 }

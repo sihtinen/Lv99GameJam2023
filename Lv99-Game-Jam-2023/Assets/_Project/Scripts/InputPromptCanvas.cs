@@ -26,19 +26,30 @@ public class InputPromptCanvas : MonoBehaviour
 
     private void Update()
     {
+        bool _isMeditatePromptActive = isMeditatePromptActive();
+
+        float _targetFontSize = _isMeditatePromptActive ? m_maxMeditateFontSize : 0f;
+        float _speed = _isMeditatePromptActive ? m_meditatePromptAppearSpeed : m_meditatePromptDisappearSpeed;
+
+        m_meditatePromptText.fontSize = Mathf.Lerp(m_meditatePromptText.fontSize, _targetFontSize, Time.deltaTime * _speed);
+    }
+
+    private static bool isMeditatePromptActive()
+    {
+        var _player = PlayerCharacter.Instance;
+        if (_player != null && _player.HasAnyUsesLeft())
+            return false;
+
+        var _playerCamera = PlayerCharacterCamera.Instance;
+        if (_playerCamera != null && _playerCamera.IsAnimating())
+            return false;
+
         bool _isMeditatePromptActive = false;
 
         var _meditateSystem = MeditationSystem.Instance;
         if (_meditateSystem != null && _meditateSystem.IsPlayerMeditating == false && _meditateSystem.OverlappingMeditationPoint != null)
             _isMeditatePromptActive = true;
 
-        var _playerCamera = PlayerCharacterCamera.Instance;
-        if (_playerCamera != null && _playerCamera.IsAnimating())
-            _isMeditatePromptActive = false;
-
-        float _targetFontSize = _isMeditatePromptActive ? m_maxMeditateFontSize : 0f;
-        float _speed = _isMeditatePromptActive ? m_meditatePromptAppearSpeed : m_meditatePromptDisappearSpeed;
-
-        m_meditatePromptText.fontSize = Mathf.Lerp(m_meditatePromptText.fontSize, _targetFontSize, Time.deltaTime * _speed);
+        return _isMeditatePromptActive;
     }
 }

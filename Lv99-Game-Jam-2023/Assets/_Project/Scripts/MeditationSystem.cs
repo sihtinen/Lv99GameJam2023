@@ -21,7 +21,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [NonSerialized] public bool IsPlayerBreathingForAbility = false;
     [NonSerialized] public AbilityTypes CurrentBreathAbility;
     [NonSerialized] public MeditationPoint OverlappingMeditationPoint = null;
-    [NonSerialized] public MeditationPoint SelectedMeditationPoint = null;
+    [NonSerialized] public MeditationPoint PreviousMeditationPoint = null;
 
     private int m_abilitiesSelected = 0;
 
@@ -114,13 +114,18 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (context.started == false)
             return;
 
-        if (IsPlayerMeditating)
-            startMeditation();
+        var _player = PlayerCharacter.Instance;
+        if (_player == null)
+            return;
+
+        if (PreviousMeditationPoint != null)
+            ResetCurrentPuzzle();
         else
         {
             if (OverlappingMeditationPoint == null)
                 return;
 
+            PreviousMeditationPoint = OverlappingMeditationPoint;
             startMeditation();
         }
     }
@@ -129,15 +134,40 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     {
         IsPlayerMeditating = false;
         IsPlayerBreathingForAbility = false;
-        SelectedMeditationPoint = null;
+
+        PreviousMeditationPoint.DeactivateMeditation();
+
         PlayerCharacterCamera.Instance?.DisableMeditationCamera();
+    }
+
+    public void ResetCurrentPuzzle()
+    {
+        var _transitionScreen = TransitionScreen.Instance;
+
+        if (_transitionScreen == null || _transitionScreen.IsTransitionActive)
+            return;
+
+        _transitionScreen.OnScreenObscured += this.onTransitionScreenObscured_resetPuzzle;
+        _transitionScreen.StartTransition();
+    }
+
+    private void onTransitionScreenObscured_resetPuzzle()
+    {
+        var _transitionScreen = TransitionScreen.Instance;
+        _transitionScreen.OnScreenObscured -= this.onTransitionScreenObscured_resetPuzzle;
+
+        var _playerMoveComponent = PlayerMoveComponent.Instance;
+        _playerMoveComponent.SetPositionAndRotation(PreviousMeditationPoint.PlayerMoveTarget);
+
+        startMeditation();
     }
 
     private void startMeditation()
     {
         IsPlayerMeditating = true;
-        SelectedMeditationPoint = OverlappingMeditationPoint;
         m_abilitiesSelected = 0;
+
+        PreviousMeditationPoint.ActivateMeditation();
 
         var _player = PlayerCharacter.Instance;
         _player.JumpUses = 0;
@@ -145,7 +175,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
         AbilityCanvas.Instance?.Initialize(m_abilityCount);
 
-        PlayerCharacterCamera.Instance?.EnableMeditationCamera(SelectedMeditationPoint);
+        PlayerCharacterCamera.Instance?.EnableMeditationCamera(PreviousMeditationPoint);
 
         var _meditationScreen = MeditationScreen.Instance;
         _meditationScreen.Clear();

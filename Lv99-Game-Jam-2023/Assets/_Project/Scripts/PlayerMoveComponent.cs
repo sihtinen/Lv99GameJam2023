@@ -159,4 +159,11 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         transform.rotation = Quaternion.Lerp(transform.rotation, moveTarget.rotation, Time.deltaTime * 20f);
     }
+
+    public void SetPositionAndRotation(Transform target)
+    {
+        m_characterController.enabled = false;
+        transform.SetPositionAndRotation(target.position, target.rotation);
+        m_characterController.enabled = true;
+    }
 }
