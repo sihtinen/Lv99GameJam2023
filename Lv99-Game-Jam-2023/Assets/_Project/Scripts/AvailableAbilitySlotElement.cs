@@ -21,16 +21,17 @@ public class AvailableAbilitySlotElement : MonoBehaviour
         AbilityCanvas.Instance.ReturnToPool(this);
     }
 
-    public void BindToAbilityElement(AvailableAbilityElement abilityElement)
+    public void BindToAbilityElement(AvailableAbilityElement abilityElement, AbilityTypes ability)
     {
         AbilityElementBinding = abilityElement;
         AbilityElementBinding.transform.SetParent(this.transform);
-        AbilityElementBinding.gameObject.SetActiveOptimized(true);
 
         RectTransform _rectTransform = AbilityElementBinding.transform as RectTransform;
         _rectTransform.SetLeft(20);
         _rectTransform.SetTop(20);
         _rectTransform.SetRight(20);
         _rectTransform.SetBottom(20);
+
+        AbilityElementBinding.BindToAbilityAndActivate(ability);
     }
 }

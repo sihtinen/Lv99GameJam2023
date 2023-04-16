@@ -71,8 +71,7 @@ public class AbilityCanvas : SingletonBehaviour<AbilityCanvas>
             if (_slot.AbilityElementBinding == null)
             {
                 var _newAbilityElement = m_abilityElementPool.Pop();
-                _newAbilityElement.BindToAbility(abilityType);
-                _slot.BindToAbilityElement(_newAbilityElement);
+                _slot.BindToAbilityElement(_newAbilityElement, abilityType);
                 break;
             }
         }

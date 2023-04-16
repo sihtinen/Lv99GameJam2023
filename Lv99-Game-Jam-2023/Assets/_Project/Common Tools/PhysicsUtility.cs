@@ -119,7 +119,7 @@ public static class PhysicsUtility
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static RaycastHitExtensions.RaycastHitResultWrapper GetGroundHit(this Vector3 position, float startVerticalOffset = 1000f, List<Collider> ignoredColliders = null)
+    public static RaycastHitExtensions.RaycastHitResultWrapper GetGroundHit(this Vector3 position, float startVerticalOffset = 1000f, float sphereRadius = 0.1f, List<Collider> ignoredColliders = null)
     {
         //if (position == m_previousSamplePosition)
         //    return m_previousHit;
@@ -128,8 +128,9 @@ public static class PhysicsUtility
 
         if (ignoredColliders == null || ignoredColliders.Count == 0)
         {
-            bool _hitFound = Physics.Raycast(
+            bool _hitFound = Physics.SphereCast(
                 position + new Vector3(0f, startVerticalOffset, 0f),
+                sphereRadius,
                 Vector3.down,
                 out CachedRaycastHit_Single,
                 2000f,
@@ -152,8 +153,9 @@ public static class PhysicsUtility
             };
         }
 
-        int _hitCount = Physics.RaycastNonAlloc(
+        int _hitCount = Physics.SphereCastNonAlloc(
             position + new Vector3(0f, startVerticalOffset, 0f),
+            sphereRadius,
             Vector3.down,
             CachedRaycastHits,
             2000f,

@@ -90,6 +90,41 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b82ea1842e6862a4286bb3ed7fd74e34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_spawnAnimationDuration: 0.6
+  m_spawnAnimationMaxScale: 1
+  m_spawnAnimationScaleCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 6.244447
+      outSlope: 6.244447
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.056412
+    - serializedVersion: 3
+      time: 0.39876068
+      value: 1.2346579
+      inSlope: 0.24221988
+      outSlope: 0.24221988
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.15381783
+      outWeight: 0.063863546
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0.6714375
+      outSlope: 0.6714375
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.09203817
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   m_nameText: {fileID: 6189082648972295103}
 --- !u!1 &6189082648972295101
 GameObject:

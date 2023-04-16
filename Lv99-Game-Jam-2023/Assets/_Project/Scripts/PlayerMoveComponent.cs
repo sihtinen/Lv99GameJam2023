@@ -40,6 +40,7 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     private CharacterController m_characterController = null;
     private PlayerCharacter m_playerCharacter = null;
     private CinemachineImpulseSource m_landImpulseSource = null;
+    private List<Collider> m_myColliders = new List<Collider>();
 
     protected override void Awake()
     {
@@ -48,6 +49,11 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         TryGetComponent(out m_characterController);
         TryGetComponent(out m_playerCharacter);
         TryGetComponent(out m_landImpulseSource);
+
+        m_myColliders.Add(m_characterController);
+
+        if (TryGetComponent(out CapsuleCollider _capsuleColl))
+            m_myColliders.Add(_capsuleColl);
 
         if (m_moveActionRef != null)
             m_moveActionRef.action.Enable();
@@ -140,13 +146,6 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
             CurrentVerticalVelocity = Mathf.MoveTowards(CurrentVerticalVelocity, -m_maxFallVelocity, Time.deltaTime * m_fallAcceleration);
 
         Vector3 _moveVelocity = m_currentHorizontalVelocity + new Vector3(0f, CurrentVerticalVelocity, 0f);
-        Vector3 _nextMovePos = transform.position + Time.deltaTime * _moveVelocity;
-
-        if (m_characterController.isGrounded && _isJumping == false && hasGroundBelow(_nextMovePos) == false)
-        {
-            _moveVelocity.x = 0f;
-            _moveVelocity.z = 0f;
-        }
 
         m_wasGroundedPreviousFrame = m_characterController.isGrounded;
         m_characterController.Move(Time.deltaTime * _moveVelocity);
@@ -165,10 +164,14 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     public bool IsGrounded => m_characterController.isGrounded;
     public bool IsRunning => IsGrounded && m_characterController.velocity.sqrMagnitude > 0.2f;
 
-    private bool hasGroundBelow(Vector3 position)
-    {
-        return PhysicsUtility.GetGroundHit(position, startVerticalOffset: 0.5f).HitFound;
-    }
+    //private bool hasGroundBelow(Vector3 position)
+    //{
+    //    return PhysicsUtility.GetGroundHit(
+    //        position, 
+    //        startVerticalOffset: 0.5f, 
+    //        sphereRadius: m_characterController.radius * 0.5f,
+    //        ignoredColliders: m_myColliders).HitFound;
+    //}
 
     public void MoveTowards(Transform moveTarget)
     {

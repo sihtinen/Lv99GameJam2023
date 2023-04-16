@@ -14,6 +14,9 @@ public class KillPlane : MonoBehaviour
         if (_meditationSystem == null)
             return;
 
-        _meditationSystem.ResetCurrentPuzzle();
+        if (_meditationSystem.PreviousMeditationPoint != null)
+            _meditationSystem.ResetCurrentPuzzle();
+        else
+            SceneLoader.Instance?.ReloadScene();
     }
 }
