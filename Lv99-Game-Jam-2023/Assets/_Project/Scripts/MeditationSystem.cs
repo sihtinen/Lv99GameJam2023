@@ -182,6 +182,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         var _playerMoveComponent = PlayerMoveComponent.Instance;
         _playerMoveComponent.SetPositionAndRotation(PreviousMeditationPoint.PlayerMoveTarget);
 
+        PreviousMeditationPoint.ResetLinkedPuzzleBehaviors();
+
         startMeditation();
     }
 

@@ -26,6 +26,7 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     [Header("Object References")]
     [SerializeField] private InputActionReference m_moveActionRef = null;
     [SerializeField] private InputActionReference m_jumpActionRef = null;
+    [SerializeField] private CinemachineImpulseSource m_onLandingImpulseSource = null;
 
     [Header("Unity Events")]
     public UnityEvent OnJumped = new UnityEvent();
@@ -39,7 +40,6 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     private Vector3 m_currentHorizontalVelocity = Vector3.zero;
     private CharacterController m_characterController = null;
     private PlayerCharacter m_playerCharacter = null;
-    private CinemachineImpulseSource m_landImpulseSource = null;
     private List<Collider> m_myColliders = new List<Collider>();
 
     protected override void Awake()
@@ -48,7 +48,6 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         TryGetComponent(out m_characterController);
         TryGetComponent(out m_playerCharacter);
-        TryGetComponent(out m_landImpulseSource);
 
         m_myColliders.Add(m_characterController);
 
@@ -109,14 +108,14 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         {
             OnLanded?.Invoke();
 
-            if (CurrentVerticalVelocity < -0.5f)
+            if (CurrentVerticalVelocity < -0.5f && m_onLandingImpulseSource != null)
             {
                 var _impulseVelocity = 0.015f * new Vector3(
                     0f,
                     CurrentVerticalVelocity,
                     0f);
 
-                m_landImpulseSource.GenerateImpulseWithVelocity(_impulseVelocity);
+                m_onLandingImpulseSource.GenerateImpulseWithVelocity(_impulseVelocity);
             }
         }
 

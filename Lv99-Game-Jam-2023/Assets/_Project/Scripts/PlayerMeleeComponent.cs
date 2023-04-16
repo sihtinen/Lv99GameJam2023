@@ -1,3 +1,4 @@
+using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -13,9 +14,16 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
     [SerializeField] private Vector3 m_hitBoxHalfExtents = new Vector3(1f, 1f, 1f);
     [SerializeField] private float m_hitCheckDistance = 1.0f;
     [SerializeField] private LayerMask m_hitLayers;
+    [Space]
+    [SerializeField] private float m_meleeHitStopDuration = 0.3f;
+    [SerializeField] private float m_meleeHitStopTimeScale = 0.3f;
+    [Space]
+    [SerializeField] private float m_meleeHitImpulseMinStrength = 0f;
+    [SerializeField] private float m_meleeHitImpulseMaxStrength = 0f;
 
     [Header("Object References")]
     [SerializeField] private InputActionReference m_meleeActionRef = null;
+    [SerializeField] private CinemachineImpulseSource m_meleeHitImpulseSource = null;
 
     [NonSerialized] public bool IsMeleeAttacking = false;
     [NonSerialized] public float MeleeTime = 0f;
@@ -90,8 +98,10 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
 
     private void calculateHit()
     {
+        Vector3 _hitOrigin = transform.position + new Vector3(0f, 1f, 0f);
+
         int _hitCount = Physics.BoxCastNonAlloc(
-            center: transform.position,
+            center: _hitOrigin,
             halfExtents: m_hitBoxHalfExtents,
             direction: transform.forward,
             results: PhysicsUtility.CachedRaycastHits,
@@ -99,6 +109,16 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
             maxDistance: m_hitCheckDistance,
             layerMask: m_hitLayers,
             queryTriggerInteraction: QueryTriggerInteraction.Ignore);
+
+        if (Application.isEditor)
+        {
+            drawBox(
+                pos: _hitOrigin + m_hitCheckDistance * transform.forward,
+                rot: transform.rotation,
+                scale: m_hitBoxHalfExtents,
+                c: Color.red,
+                time: 5f);
+        }
 
         if (_hitCount == 0)
             return;
@@ -110,5 +130,53 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
             if (_coll.transform.TryGetComponent(out IMeleeTarget _meleeTarget))
                 _meleeTarget.OnHit(playerPosition: transform.position);
         }
+
+        if (m_meleeHitImpulseSource != null)
+        {
+            var _impulseVelocity = m_meleeHitImpulseMaxStrength * UnityEngine.Random.insideUnitSphere;
+            if (_impulseVelocity.magnitude < m_meleeHitImpulseMinStrength)
+                _impulseVelocity = m_meleeHitImpulseMinStrength * _impulseVelocity.normalized;
+
+            m_meleeHitImpulseSource.GenerateImpulseWithVelocity(_impulseVelocity);
+        }
+
+        HitStop.Play(timeScale: m_meleeHitStopTimeScale, duration: m_meleeHitStopDuration);
+    }
+
+    private void drawBox(Vector3 pos, Quaternion rot, Vector3 scale, Color c, float time)
+    {
+        // create matrix
+        Matrix4x4 m = new Matrix4x4();
+        m.SetTRS(pos, rot, scale);
+
+        var point1 = m.MultiplyPoint(new Vector3(-0.5f, -0.5f, 0.5f));
+        var point2 = m.MultiplyPoint(new Vector3(0.5f, -0.5f, 0.5f));
+        var point3 = m.MultiplyPoint(new Vector3(0.5f, -0.5f, -0.5f));
+        var point4 = m.MultiplyPoint(new Vector3(-0.5f, -0.5f, -0.5f));
+
+        var point5 = m.MultiplyPoint(new Vector3(-0.5f, 0.5f, 0.5f));
+        var point6 = m.MultiplyPoint(new Vector3(0.5f, 0.5f, 0.5f));
+        var point7 = m.MultiplyPoint(new Vector3(0.5f, 0.5f, -0.5f));
+        var point8 = m.MultiplyPoint(new Vector3(-0.5f, 0.5f, -0.5f));
+
+        Debug.DrawLine(point1, point2, c, time);
+        Debug.DrawLine(point2, point3, c, time);
+        Debug.DrawLine(point3, point4, c, time);
+        Debug.DrawLine(point4, point1, c, time);
+
+        Debug.DrawLine(point5, point6, c, time);
+        Debug.DrawLine(point6, point7, c, time);
+        Debug.DrawLine(point7, point8, c, time);
+        Debug.DrawLine(point8, point5, c, time);
+
+        Debug.DrawLine(point1, point5, c, time);
+        Debug.DrawLine(point2, point6, c, time);
+        Debug.DrawLine(point3, point7, c, time);
+        Debug.DrawLine(point4, point8, c, time);
+
+        // optional axis display
+        //Debug.DrawRay(m.GetPosition(), m.GetForward(), Color.magenta);
+        //Debug.DrawRay(m.GetPosition(), m.GetUp(), Color.yellow);
+        //Debug.DrawRay(m.GetPosition(), m.GetRight(), Color.red);
     }
 }

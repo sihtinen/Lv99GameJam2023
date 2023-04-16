@@ -1,14 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
 
 using Cinemachine;
-using System;
 
 public class MeditationPoint : MonoBehaviour
 {
     [Header("Object References")]
+    [SerializeField] private List<PuzzleBehaviour> m_linkedPuzzleBehaviors = new();
+    [Space]
     [SerializeField] private Transform m_cameraTargetIn = null;
     [SerializeField] private Transform m_cameraTargetOut = null;
     [SerializeField] private Transform m_playerMoveTarget = null;
@@ -55,6 +57,12 @@ public class MeditationPoint : MonoBehaviour
     {
         OnBecameActive?.Invoke();
         m_virtualCam.enabled = true;
+    }
+
+    public void ResetLinkedPuzzleBehaviors()
+    {
+        for (int i = 0; i < m_linkedPuzzleBehaviors.Count; i++)
+            m_linkedPuzzleBehaviors[i].ResetPuzzleState();
     }
 
     public void DeactivateMeditation()
