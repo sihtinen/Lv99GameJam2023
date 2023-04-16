@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c4d763ec891d224ca04cb4e5cfbeae3, type: 3}
+  m_Name: MinigameCollection_Melee
+  m_EditorClassIdentifier: 
+  AvailableMinigames:
+  - {fileID: 11400000, guid: 3751c4988fd468e4abf3d83bb8ea9468, type: 2}
+  - {fileID: 11400000, guid: bca85ecb8eec844458f27f8a1b858d61, type: 2}

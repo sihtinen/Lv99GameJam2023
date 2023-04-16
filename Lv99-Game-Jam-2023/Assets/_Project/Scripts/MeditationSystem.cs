@@ -11,17 +11,25 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [SerializeField] private bool m_isJumpAvailable = false;
     [SerializeField] private bool m_isMeleeAvailable = false;
     [SerializeField, Min(1)] private int m_abilityCount = 3;
+    [Space]
+    [SerializeField] private float m_minigameSuccessWindowHalf = 0.2f;
 
     [Header("Object References")]
     [SerializeField] private InputActionReference m_jumpActionRef = null;
     [SerializeField] private InputActionReference m_meleeActionRef = null;
     [SerializeField] private InputActionReference m_breathActionRef = null;
+    [Space]
+    [SerializeField] private BreathMinigameCollection m_jumpMinigameCollection = null;
+    [SerializeField] private BreathMinigameCollection m_meleeMinigameCollection = null;
 
     [NonSerialized] public bool IsPlayerMeditating = false;
-    [NonSerialized] public bool IsPlayerBreathingForAbility = false;
+    [NonSerialized] public bool IsBreathMinigameActive = false;
+    [NonSerialized] public bool IsMinigameSuccessWindowActive = false;
     [NonSerialized] public AbilityTypes CurrentBreathAbility;
     [NonSerialized] public MeditationPoint OverlappingMeditationPoint = null;
     [NonSerialized] public MeditationPoint PreviousMeditationPoint = null;
+    [NonSerialized] public float CurrentMinigameTime = 0f;
+    [NonSerialized] public BreathMinigameSettings CurrentMinigameSettings = null;
 
     private int m_abilitiesSelected = 0;
 
@@ -73,6 +81,19 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         }
     }
 
+    private void Update()
+    {
+        if (IsBreathMinigameActive)
+        {
+            CurrentMinigameTime += Time.unscaledDeltaTime;
+
+            IsMinigameSuccessWindowActive = Mathf.Abs(CurrentMinigameSettings.Duration - CurrentMinigameTime) < m_minigameSuccessWindowHalf;
+
+            if (CurrentMinigameTime > CurrentMinigameSettings.Duration + m_minigameSuccessWindowHalf)
+                endBreathMinigame();
+        }
+    }
+
     private void onJumpInput(InputAction.CallbackContext context)
     {
         if (IsPlayerMeditating == false)
@@ -82,12 +103,12 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             return;
 
         if (context.started)
-            startBreathForAbility(AbilityTypes.Jump);
+            startBreathMinigame(AbilityTypes.Jump);
 
         if (context.canceled)
         {
-            if (IsPlayerBreathingForAbility && CurrentBreathAbility == AbilityTypes.Jump)
-                endBreathForAbility();
+            if (IsBreathMinigameActive && CurrentBreathAbility == AbilityTypes.Jump)
+                endBreathMinigame();
         }
     }
 
@@ -100,12 +121,12 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             return;
 
         if (context.started)
-            startBreathForAbility(AbilityTypes.Melee);
+            startBreathMinigame(AbilityTypes.Melee);
 
         if (context.canceled)
         {
-            if (IsPlayerBreathingForAbility && CurrentBreathAbility == AbilityTypes.Melee)
-                endBreathForAbility();
+            if (IsBreathMinigameActive && CurrentBreathAbility == AbilityTypes.Melee)
+                endBreathMinigame();
         }
     }
 
@@ -133,7 +154,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     private void exitMeditation()
     {
         IsPlayerMeditating = false;
-        IsPlayerBreathingForAbility = false;
+        IsBreathMinigameActive = false;
 
         PreviousMeditationPoint.DeactivateMeditation();
 
@@ -189,19 +210,34 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             _meditationScreen.EnableAbilitySelection(AbilityTypes.Melee);
     }
 
-    private void startBreathForAbility(AbilityTypes abilityType)
+    private void startBreathMinigame(AbilityTypes abilityType)
     {
-        IsPlayerBreathingForAbility = true;
+        IsBreathMinigameActive = true;
+        CurrentMinigameTime = 0f;
         CurrentBreathAbility = abilityType;
+
+        switch (CurrentBreathAbility)
+        {
+            case AbilityTypes.Jump:
+                CurrentMinigameSettings = m_jumpMinigameCollection.AvailableMinigames.GetRandomElement();
+                break;
+            case AbilityTypes.Melee:
+                CurrentMinigameSettings = m_meleeMinigameCollection.AvailableMinigames.GetRandomElement();
+                break;
+            case AbilityTypes.Ability3:
+                break;
+            case AbilityTypes.Ability4:
+                break;
+        }
+
+        MeditationScreen.Instance?.OnBreathMinigameStarted(CurrentBreathAbility);
     }
 
-    private void endBreathForAbility()
+    private void endBreathMinigame()
     {
-        IsPlayerBreathingForAbility = false;
+        IsBreathMinigameActive = false;
 
-        bool _isSuccess = true;
-
-        if (_isSuccess)
+        if (IsMinigameSuccessWindowActive)
         {
             switch (CurrentBreathAbility)
             {
@@ -219,10 +255,14 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
             m_abilitiesSelected++;
 
-            AbilityCanvas.Instance.AddAbilityElement(CurrentBreathAbility);
+            AbilityCanvas.Instance?.AddAbilityElement(CurrentBreathAbility);
         }
+
+        MeditationScreen.Instance?.OnBreathEnded(IsMinigameSuccessWindowActive);
 
         if (m_abilitiesSelected >= m_abilityCount)
             exitMeditation();
+
+        CurrentMinigameSettings = null;
     }
 }

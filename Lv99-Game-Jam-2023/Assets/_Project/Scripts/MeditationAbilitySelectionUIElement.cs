@@ -12,10 +12,17 @@ public class MeditationAbilitySelectionUIElement : MonoBehaviour
     [SerializeField] private TMP_Text m_labelText = null;
 
     [NonSerialized] public AbilityTypes AbilityType;
+    [NonSerialized] public RectTransform RectTransform = null;
+
+    private void Awake()
+    {
+        RectTransform = transform as RectTransform;
+    }
 
     public void BindToAbility(AbilityTypes abilityType)
     {
         AbilityType = abilityType;
+        m_labelText.SetText(AbilityType.ToString());
         transform.SetAsLastSibling();
         gameObject.SetActive(true);
     }
