@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Cinemachine;
-using System;
 
+[DefaultExecutionOrder(-2)]
 public class Railroad : MonoBehaviour
 {
     [SerializeField] private List<CinemachineSmoothPath> m_cmSmoothPaths = new();

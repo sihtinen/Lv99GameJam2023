@@ -146,31 +146,87 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         Vector3 _moveVelocity = m_currentHorizontalVelocity + new Vector3(0f, CurrentVerticalVelocity, 0f);
 
+        if (m_characterController.isGrounded && m_standingOnMinecart != null)
+        {
+            var _minecartVelocity = m_standingOnMinecart.GetVelocity();
+            _moveVelocity += _minecartVelocity;
+        }
+
         m_wasGroundedPreviousFrame = m_characterController.isGrounded;
         m_characterController.Move(Time.deltaTime * _moveVelocity);
 
+        if (m_characterController.isGrounded == false)
+        {
+            m_previousGroundCheckObjectID = -1;
+            m_standingOnMinecart = null;
+        }
+
+        updateCharacterForwardDirection(_moveInput);
+    }
+
+    private void updateCharacterForwardDirection(Vector2 moveInput)
+    {
         var _velocity = m_characterController.velocity;
 
-        if (_velocity.sqrMagnitude > 0.2f)
+        if (m_characterController.isGrounded && m_standingOnMinecart != null)
+            _velocity -= m_standingOnMinecart.GetVelocity();
+
+        _velocity.y = 0f;
+
+        if (_velocity.magnitude > 0.1f)
         {
             Vector3 _newForward = new Vector3(_velocity.x, 0f, _velocity.z).normalized;
 
             if (_newForward != Vector3.zero)
                 transform.forward = _newForward;
         }
+        else if (moveInput.magnitude > 0.01f)
+        {
+            Vector3 _newForward = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+
+            if (_newForward != Vector3.zero)
+                transform.forward = _newForward;
+        }
+    }
+
+    private int m_previousGroundCheckObjectID = -1;
+    private Minecart m_standingOnMinecart = null;
+
+    private void OnControllerColliderHit(ControllerColliderHit hit)
+    {
+        if (hit.collider == null)
+        {
+            m_previousGroundCheckObjectID = -1;
+            m_standingOnMinecart = null;
+            return;
+        }
+
+        int _id = hit.transform.root.GetInstanceID();
+
+        if (_id == m_previousGroundCheckObjectID)
+            return;
+
+        m_previousGroundCheckObjectID = _id;
+
+        hit.transform.root.TryGetComponent(out m_standingOnMinecart);
     }
 
     public bool IsGrounded => m_characterController.isGrounded;
-    public bool IsRunning => IsGrounded && m_characterController.velocity.sqrMagnitude > 0.2f;
+    public bool IsRunning
+    {
+        get
+        {
+            if (IsGrounded == false)
+                return false;
 
-    //private bool hasGroundBelow(Vector3 position)
-    //{
-    //    return PhysicsUtility.GetGroundHit(
-    //        position, 
-    //        startVerticalOffset: 0.5f, 
-    //        sphereRadius: m_characterController.radius * 0.5f,
-    //        ignoredColliders: m_myColliders).HitFound;
-    //}
+            Vector3 _vel = m_characterController.velocity;
+
+            if (m_standingOnMinecart != null)
+                _vel -= m_standingOnMinecart.GetVelocity();
+
+            return _vel.sqrMagnitude > 0.2f;
+        }
+    }
 
     public void MoveTowards(Transform moveTarget)
     {

@@ -6,7 +6,7 @@ using UnityEngine;
 
 using Cinemachine;
 
-[DefaultExecutionOrder(1)]
+[DefaultExecutionOrder(-1)]
 public class Minecart : PuzzleBehaviour, IMeleeTarget
 {
     public MinecartState InitialState = new MinecartState();
@@ -19,15 +19,18 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
     public float MaxFallVelocity = 8f;
     public float FallVelocityAcceleration = 3f;
 
-    [NonSerialized] public bool IsOnRailroad;
-    [NonSerialized] public bool IsMoving;
+    [NonSerialized] public bool IsOnRailroad = false;
+    [NonSerialized] public bool IsMoving = false;
+    [NonSerialized] public bool IsPooled = false;
     [NonSerialized] public float RailPathPosition;
     [NonSerialized] public float AccelerationTime = 0f;
     [NonSerialized] public float VerticalVelocity = 0f;
     [NonSerialized] public Railroad CurrentRailroad = null;
     [NonSerialized] public CinemachineSmoothPath CurrentPath = null;
 
+    private bool m_isPathReversed = false;
     private BoxCollider m_boxCollider = null;
+    private List<Railroad> m_collidedRailroads = new List<Railroad>();
 
     private void Awake()
     {
@@ -52,8 +55,20 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
         if (CurrentRailroad != null)
         {
             CurrentPath = CurrentRailroad.GetOpenPath();
-            RailPathPosition = CurrentPath.FromPathNativeUnits(CurrentPath.FindClosestPoint(transform.position, 0, -1, 32), CinemachinePathBase.PositionUnits.Distance);
+            prepareRailroadPath();
         }
+
+        gameObject.SetActiveOptimized(true);
+    }
+
+    private void prepareRailroadPath()
+    {
+        RailPathPosition = CurrentPath.FromPathNativeUnits(CurrentPath.FindClosestPoint(transform.position, 0, -1, 32), CinemachinePathBase.PositionUnits.Distance);
+
+        var _defaultOrientation = CurrentPath.EvaluateOrientationAtUnit(RailPathPosition, CinemachinePathBase.PositionUnits.Distance);
+        var _defaultForwardDir = _defaultOrientation * Vector3.forward;
+
+        m_isPathReversed = Vector3.Dot(_defaultForwardDir, transform.forward) < 0;
     }
 
     private void Update()
@@ -66,6 +81,9 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
 
         if (IsOnRailroad == false)
             updateNonRailroadMovement();
+
+        if (m_collidedRailroads.Count > 0)
+            resolveRailroadCollisions();
     }
 
     private void updateRailPathMovement()
@@ -79,21 +97,57 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
 
         float _accelerationCurveVal = AccelerationCurve.Evaluate(AccelerationTime / AccelerationDuration);
         float _speed = MaxSpeed * _accelerationCurveVal;
-        RailPathPosition += _speed * Time.deltaTime;
 
-        if (RailPathPosition >= CurrentPath.PathLength)
+        bool _pathUpdated = false;
+        float _distanceOverflow = 0f;
+
+        if (m_isPathReversed)
         {
-            RailPathPosition -= CurrentPath.PathLength;
-            getNextRailPath();
+            RailPathPosition -= _speed * Time.deltaTime;
+
+            if (RailPathPosition <= 0f)
+            {
+                _pathUpdated = true;
+                _distanceOverflow = Mathf.Abs(RailPathPosition);
+                getNextRailPath();
+            }
+        }
+        else
+        {
+            RailPathPosition += _speed * Time.deltaTime;
+
+            if (RailPathPosition >= CurrentPath.PathLength)
+            {
+                _pathUpdated = true;
+                _distanceOverflow = RailPathPosition - CurrentPath.PathLength;
+                getNextRailPath();
+            }
         }
 
         if (IsOnRailroad == false)
             return;
 
-        Vector3 _pos = CurrentPath.EvaluatePositionAtUnit(RailPathPosition, CinemachinePathBase.PositionUnits.Distance);
-        Quaternion _rot = CurrentPath.EvaluateOrientationAtUnit(RailPathPosition, CinemachinePathBase.PositionUnits.Distance);
+        if (_pathUpdated)
+        {
+            if (m_isPathReversed)
+                RailPathPosition -= _distanceOverflow;
+            else
+                RailPathPosition += _distanceOverflow;
+        }
 
-        transform.SetPositionAndRotation(_pos, _rot);
+        Vector3 _targetPos = CurrentPath.EvaluatePositionAtUnit(RailPathPosition, CinemachinePathBase.PositionUnits.Distance);
+        Quaternion _targetRot = CurrentPath.EvaluateOrientationAtUnit(RailPathPosition, CinemachinePathBase.PositionUnits.Distance);
+
+        if (m_isPathReversed)
+            _targetRot *= Quaternion.Euler(0f, 180f, 0f);
+
+        Vector3 _finalPos = Vector3.Lerp(transform.position, _targetPos, Time.deltaTime * 40f);
+        Quaternion _finalRot = Quaternion.Lerp(transform.rotation, _targetRot, Time.deltaTime * 20f);
+
+        transform.SetPositionAndRotation(_finalPos, _finalRot);
+
+        //if (m_isPathReversed)
+        //    transform.forward = -transform.forward;
     }
 
     private void updateNonRailroadMovement()
@@ -115,6 +169,16 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
 
         transform.position += _speed * Time.deltaTime * transform.forward;
         transform.position -= VerticalVelocity * Time.deltaTime * Vector3.up;
+
+        if (transform.position.y < -40)
+        {
+            if (IsPooled)
+            {
+
+            }
+            else
+                gameObject.SetActiveOptimized(false);
+        }
     }
 
     private void getNextRailPath()
@@ -129,6 +193,7 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
             {
                 CurrentRailroad = _socket.RailroadComponent;
                 CurrentPath = _socket.Path;
+                prepareRailroadPath();
                 return;
             }
         }
@@ -164,13 +229,39 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
 
     public void OnCollidedWithRailroad(Railroad railroad)
     {
-        if (railroad == CurrentRailroad)
+        m_collidedRailroads.Add(railroad);
+    }
+
+    private void resolveRailroadCollisions()
+    {
+        float _closestDistance = float.MaxValue;
+        Railroad _closestRailroad = null;
+
+        for (int i = 0; i < m_collidedRailroads.Count; i++)
+        {
+            var _railroad = m_collidedRailroads[i];
+
+            if (_railroad == CurrentRailroad)
+                continue;
+
+            float _dist = Vector3.Distance(transform.position, _railroad.transform.position);
+
+            if (_dist < _closestDistance)
+            {
+                _closestDistance = _dist;
+                _closestRailroad = _railroad;
+            }
+        }
+
+        m_collidedRailroads.Clear();
+
+        if (_closestRailroad == null)
             return;
 
-        CurrentRailroad = railroad;
         IsOnRailroad = true;
+        CurrentRailroad = _closestRailroad;
         CurrentPath = CurrentRailroad.GetOpenPath();
-        RailPathPosition = CurrentPath.FromPathNativeUnits(CurrentPath.FindClosestPoint(transform.position, 0, -1, 32), CinemachinePathBase.PositionUnits.Distance);
+        prepareRailroadPath();
     }
 
     public void OnHit(Vector3 playerPosition)
@@ -180,6 +271,17 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
 
         AccelerationTime = AccelerationDuration * 0.33f;
         IsMoving = true;
+    }
+
+    public Vector3 GetVelocity()
+    {
+        float _accelerationCurveVal = AccelerationCurve.Evaluate(AccelerationTime / AccelerationDuration);
+        float _speed = MaxSpeed * _accelerationCurveVal;
+
+        Vector3 _result = Vector3.zero;
+        _result += _speed * transform.forward;
+        _result -= VerticalVelocity * Vector3.up;
+        return _result;
     }
 
     [System.Serializable]

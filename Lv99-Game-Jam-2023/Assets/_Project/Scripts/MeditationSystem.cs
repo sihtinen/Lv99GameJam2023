@@ -10,6 +10,9 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [Header("Meditation Settings")]
     [SerializeField] private float m_minigameSuccessWindowHalf = 0.2f;
 
+    [Header("Debug Settings")]
+    [SerializeField] private bool m_debugSkipMinigames = false;
+
     [Header("Object References")]
     [SerializeField] private InputActionReference m_jumpActionRef = null;
     [SerializeField] private InputActionReference m_meleeActionRef = null;
@@ -235,7 +238,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     {
         IsBreathMinigameActive = false;
 
-        if (IsMinigameSuccessWindowActive)
+        if (IsMinigameSuccessWindowActive || (Application.isEditor && m_debugSkipMinigames))
         {
             switch (CurrentBreathAbility)
             {
