@@ -8,10 +8,6 @@ using UnityEngine.InputSystem;
 public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 {
     [Header("Meditation Settings")]
-    [SerializeField] private bool m_isJumpAvailable = false;
-    [SerializeField] private bool m_isMeleeAvailable = false;
-    [SerializeField, Min(1)] private int m_abilityCount = 3;
-    [Space]
     [SerializeField] private float m_minigameSuccessWindowHalf = 0.2f;
 
     [Header("Object References")]
@@ -27,7 +23,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [NonSerialized] public bool IsMinigameSuccessWindowActive = false;
     [NonSerialized] public AbilityTypes CurrentBreathAbility;
     [NonSerialized] public MeditationPoint OverlappingMeditationPoint = null;
-    [NonSerialized] public MeditationPoint PreviousMeditationPoint = null;
+    [NonSerialized] public MeditationPoint ActiveMeditationPoint = null;
     [NonSerialized] public float CurrentMinigameTime = 0f;
     [NonSerialized] public BreathMinigameSettings CurrentMinigameSettings = null;
 
@@ -99,7 +95,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (IsPlayerMeditating == false)
             return;
 
-        if (m_isJumpAvailable == false)
+        if (ActiveMeditationPoint.IsJumpAvailable == false)
             return;
 
         if (context.started)
@@ -117,7 +113,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (IsPlayerMeditating == false)
             return;
 
-        if (m_isMeleeAvailable == false)
+        if (ActiveMeditationPoint.IsMeleeAvailable == false)
             return;
 
         if (context.started)
@@ -139,14 +135,14 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (_player == null)
             return;
 
-        if (PreviousMeditationPoint != null)
+        if (ActiveMeditationPoint != null)
             ResetCurrentPuzzle();
         else
         {
             if (OverlappingMeditationPoint == null)
                 return;
 
-            PreviousMeditationPoint = OverlappingMeditationPoint;
+            ActiveMeditationPoint = OverlappingMeditationPoint;
             startMeditation();
         }
     }
@@ -156,7 +152,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         IsPlayerMeditating = false;
         IsBreathMinigameActive = false;
 
-        PreviousMeditationPoint.DeactivateMeditation();
+        ActiveMeditationPoint.DeactivateMeditation();
 
         PlayerMoveComponent.Instance?.ResetVerticalVelocity();
 
@@ -180,9 +176,9 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         _transitionScreen.OnScreenObscured -= this.onTransitionScreenObscured_resetPuzzle;
 
         var _playerMoveComponent = PlayerMoveComponent.Instance;
-        _playerMoveComponent.SetPositionAndRotation(PreviousMeditationPoint.PlayerMoveTarget);
+        _playerMoveComponent.SetPositionAndRotation(ActiveMeditationPoint.PlayerMoveTarget);
 
-        PreviousMeditationPoint.ResetLinkedPuzzleBehaviors();
+        ActiveMeditationPoint.ResetLinkedPuzzleBehaviors();
 
         startMeditation();
     }
@@ -192,23 +188,23 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         IsPlayerMeditating = true;
         m_abilitiesSelected = 0;
 
-        PreviousMeditationPoint.ActivateMeditation();
+        ActiveMeditationPoint.ActivateMeditation();
 
         var _player = PlayerCharacter.Instance;
         _player.JumpUses = 0;
         _player.MeleeUses = 0;
 
-        AbilityCanvas.Instance?.Initialize(m_abilityCount);
+        AbilityCanvas.Instance?.Initialize(ActiveMeditationPoint.AbilityCount);
 
-        PlayerCharacterCamera.Instance?.EnableMeditationCamera(PreviousMeditationPoint);
+        PlayerCharacterCamera.Instance?.EnableMeditationCamera(ActiveMeditationPoint);
 
         var _meditationScreen = MeditationScreen.Instance;
         _meditationScreen.Clear();
 
-        if (m_isJumpAvailable)
+        if (ActiveMeditationPoint.IsJumpAvailable)
             _meditationScreen.EnableAbilitySelection(AbilityTypes.Jump);
 
-        if (m_isMeleeAvailable)
+        if (ActiveMeditationPoint.IsMeleeAvailable)
             _meditationScreen.EnableAbilitySelection(AbilityTypes.Melee);
     }
 
@@ -262,7 +258,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
         MeditationScreen.Instance?.OnBreathEnded(IsMinigameSuccessWindowActive);
 
-        if (m_abilitiesSelected >= m_abilityCount)
+        if (m_abilitiesSelected >= ActiveMeditationPoint.AbilityCount)
             exitMeditation();
 
         CurrentMinigameSettings = null;

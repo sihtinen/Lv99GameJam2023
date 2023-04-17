@@ -50,7 +50,7 @@ public class PlayerSquashStretch : MonoBehaviour
         float _verticalVelocity = Mathf.Min(Mathf.Abs(m_moveComponent.CurrentVerticalVelocity), m_maxVerticalVelocity);
         float _verticalVelocityNormalized = _verticalVelocity / m_maxVerticalVelocity;
 
-        if (m_moveComponent.IsGrounded || m_moveComponent.CurrentVerticalVelocity > 0f)
+        if (m_moveComponent.IsGrounded /*|| m_moveComponent.CurrentVerticalVelocity > 0f*/)
             _verticalVelocityNormalized = 0f;
 
         float _horizontalScaleOffset = _verticalVelocityNormalized * m_verticalVelocity_HorizontalScaleOffset;

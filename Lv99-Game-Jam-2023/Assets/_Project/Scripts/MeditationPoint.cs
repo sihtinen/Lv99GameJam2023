@@ -8,6 +8,11 @@ using Cinemachine;
 
 public class MeditationPoint : MonoBehaviour
 {
+    [Header("Puzzle Settings")]
+    public bool IsJumpAvailable = false;
+    public bool IsMeleeAvailable = false;
+    [Min(1)] public int AbilityCount = 3;
+
     [Header("Object References")]
     [SerializeField] private List<PuzzleBehaviour> m_linkedPuzzleBehaviors = new();
     [Space]
@@ -62,7 +67,10 @@ public class MeditationPoint : MonoBehaviour
     public void ResetLinkedPuzzleBehaviors()
     {
         for (int i = 0; i < m_linkedPuzzleBehaviors.Count; i++)
-            m_linkedPuzzleBehaviors[i].ResetPuzzleState();
+        {
+            if (m_linkedPuzzleBehaviors[i] != null)
+                m_linkedPuzzleBehaviors[i].ResetPuzzleState();
+        }
     }
 
     public void DeactivateMeditation()

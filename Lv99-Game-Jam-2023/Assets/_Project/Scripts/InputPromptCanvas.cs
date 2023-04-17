@@ -84,7 +84,7 @@ public class InputPromptCanvas : MonoBehaviour
     private static bool isRetryPromptActive()
     {
         var _meditateSystem = MeditationSystem.Instance;
-        if (_meditateSystem != null && _meditateSystem.PreviousMeditationPoint != null)
+        if (_meditateSystem != null && _meditateSystem.ActiveMeditationPoint != null)
             return true;
 
         return false;
