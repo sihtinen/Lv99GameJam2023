@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
@@ -24,6 +25,10 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
     [Header("Object References")]
     [SerializeField] private InputActionReference m_meleeActionRef = null;
     [SerializeField] private CinemachineImpulseSource m_meleeHitImpulseSource = null;
+
+    [Header("Events")]
+    public UnityEvent OnMeleeSwingBegin = new();
+    public UnityEvent OnMeleeSwingHit = new();
 
     [NonSerialized] public bool IsMeleeAttacking = false;
     [NonSerialized] public float MeleeTime = 0f;
@@ -75,6 +80,8 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
         IsMeleeAttacking = true;
         MeleeTime = 0f;
 
+        OnMeleeSwingBegin?.Invoke();
+
         bool _hitDealt = false;
         float _timer = 0f;
 
@@ -123,13 +130,23 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
         if (_hitCount == 0)
             return;
 
+        bool _hitValidTarget = false;
+
         for (int i = 0; i < _hitCount; i++)
         {
             var _coll = PhysicsUtility.CachedRaycastHits[i];
 
             if (_coll.transform.TryGetComponent(out IMeleeTarget _meleeTarget))
+            {
                 _meleeTarget.OnHit(playerPosition: transform.position);
+                _hitValidTarget = true;
+            }
         }
+
+        if (_hitValidTarget == false)
+            return;
+
+        OnMeleeSwingHit?.Invoke();
 
         if (m_meleeHitImpulseSource != null)
         {

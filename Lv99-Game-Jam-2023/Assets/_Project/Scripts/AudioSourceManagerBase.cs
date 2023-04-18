@@ -9,8 +9,8 @@ public abstract class AudioSourceManagerBase<T> : SingletonBehaviour<T> where T 
     [SerializeField] private int m_audioSourcePoolSize = 16;
     [SerializeField] private AudioPlayer m_audioPlayerPrefab = null;
 
-    protected Stack<AudioSource> m_audioSourcePool = new();
-    protected List<AudioSource> m_activeAudioSources = new();
+    protected Stack<AudioPlayer> m_audioPlayerPool = new();
+    protected List<AudioPlayer> m_activeAudioPlayers = new();
 
     protected override void Awake()
     {
@@ -25,36 +25,36 @@ public abstract class AudioSourceManagerBase<T> : SingletonBehaviour<T> where T 
             DontDestroyOnLoad(_audioSourceObj);
             _audioSourceObj.SetActiveOptimized(false);
 
-            _audioSourceObj.TryGetComponent(out AudioSource _audioSource);
-            m_audioSourcePool.Push(_audioSource);
+            _audioSourceObj.TryGetComponent(out AudioPlayer _audioPlayer);
+            m_audioPlayerPool.Push(_audioPlayer);
         }
     }
 
     protected virtual void LateUpdate()
     {
-        for (int i = m_activeAudioSources.Count; i-- > 0;)
+        for (int i = m_activeAudioPlayers.Count; i-- > 0;)
         {
-            var _source = m_activeAudioSources[i];
+            var _source = m_activeAudioPlayers[i];
 
-            if (_source.isPlaying == false)
+            if (_source.IsPlaying() == false)
             {
                 _source.gameObject.SetActiveOptimized(false);
-                m_activeAudioSources.RemoveAt(i);
-                m_audioSourcePool.Push(_source);
+                m_activeAudioPlayers.RemoveAt(i);
+                m_audioPlayerPool.Push(_source);
             }
         }
     }
 
-    protected AudioSource tryGetNewAudioSource()
+    protected AudioPlayer tryGetNewAudioPlayer()
     {
-        if (m_audioSourcePool.Count == 0)
+        if (m_audioPlayerPool.Count == 0)
         {
             Debug.Log($"{GetType().Name}.tryGetNewAudioSource(): audio source pool is empty - returning null");
             return null;
         }
 
-        var _audioSource = m_audioSourcePool.Pop();
-        m_activeAudioSources.Add(_audioSource);
+        var _audioSource = m_audioPlayerPool.Pop();
+        m_activeAudioPlayers.Add(_audioSource);
         return _audioSource;
     }
 }

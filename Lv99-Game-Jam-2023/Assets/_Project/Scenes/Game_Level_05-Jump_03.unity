@@ -10526,7 +10526,7 @@ PrefabInstance:
     - target: {fileID: 2585621458836329217, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
       propertyPath: m_CameraDistance
-      value: 50
+      value: 27.8
       objectReference: {fileID: 0}
     - target: {fileID: 2585621458997720555, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
@@ -10546,12 +10546,12 @@ PrefabInstance:
     - target: {fileID: 2585621459339449640, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 46.35919
+      value: 25.77571
       objectReference: {fileID: 0}
     - target: {fileID: 2585621459339449640, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -28.390331
+      value: -20.074066
       objectReference: {fileID: 0}
     - target: {fileID: 2585621459339449640, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
@@ -10586,7 +10586,7 @@ PrefabInstance:
     - target: {fileID: 2585621459339449643, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
       propertyPath: m_Lens.FieldOfView
-      value: 38
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 2585621459715531202, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
@@ -10780,7 +10780,7 @@ PrefabInstance:
     - target: {fileID: 2894999291198316781, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: field of view
-      value: 38
+      value: 42
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
@@ -10790,12 +10790,12 @@ PrefabInstance:
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 46.35919
+      value: 25.77571
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -35.223732
+      value: -26.907465
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
@@ -11861,13 +11861,13 @@ PrefabInstance:
     - target: {fileID: 7019027004969777714, guid: fc8f27d9eb815a14a8b4a4b449fe321d,
         type: 3}
       propertyPath: m_sceneToLoad.scenePath
-      value: Assets/_Project/Scenes/Game_Level_01-Melee_01.unity
+      value: Assets/_Project/Scenes/Game_Level_06-Inhale_01.unity
       objectReference: {fileID: 0}
     - target: {fileID: 7019027004969777714, guid: fc8f27d9eb815a14a8b4a4b449fe321d,
         type: 3}
       propertyPath: m_sceneToLoad.sceneAsset
       value: 
-      objectReference: {fileID: 102900000, guid: ea96d34e0307bd1438f6abc5bd0b5da2,
+      objectReference: {fileID: 102900000, guid: c6a8dc4182a691b4c82f1153f39e3430,
         type: 3}
     - target: {fileID: 7019027004969777717, guid: fc8f27d9eb815a14a8b4a4b449fe321d,
         type: 3}

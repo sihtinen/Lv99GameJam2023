@@ -10,14 +10,14 @@ public class FootstepAudioManager : AudioSourceManagerBase<FootstepAudioManager>
 
     public void PlayAudio(Vector3 position)
     {
-        var _audioSource = tryGetNewAudioSource();
+        var _audioPlayer = tryGetNewAudioPlayer();
 
-        if (_audioSource == null)
+        if (_audioPlayer == null)
             return;
 
-        _audioSource.clip = m_stoneFootstepClips.GetRandomElement();
-        _audioSource.transform.position = position;
-        _audioSource.gameObject.SetActiveOptimized(true);
-        _audioSource.Play();
+        _audioPlayer.clip = m_stoneFootstepClips.GetRandomElement();
+        _audioPlayer.transform.position = position;
+        _audioPlayer.gameObject.SetActiveOptimized(true);
+        _audioPlayer.Play();
     }
 }

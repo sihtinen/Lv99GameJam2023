@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -12,6 +13,9 @@ public abstract class AudioPlayer : MonoBehaviour
     [Header("Object References")]
     [SerializeField] protected AudioSource m_audioSource = null;
 
+    [NonSerialized] public bool IsDelayed = false;
+    [NonSerialized] public float DelayTimeRemaining = 0f;
+
     protected virtual void OnDestroy()
     {
         if (m_audioSource != null && m_audioSource.isPlaying)
@@ -20,6 +24,19 @@ public abstract class AudioPlayer : MonoBehaviour
 
     protected virtual void Update()
     {
+        if (IsDelayed)
+        {
+            DelayTimeRemaining -= Time.deltaTime;
+
+            if (DelayTimeRemaining <= 0f)
+            {
+                IsDelayed = false;
+                m_audioSource.Play();
+            }
+
+            return;
+        }
+
         if (m_audioSource.isPlaying == false)
             return;
 
@@ -29,5 +46,30 @@ public abstract class AudioPlayer : MonoBehaviour
             return;
 
         m_audioSource.volume = m_volume * _channelManager.GetChannelVolume(m_channel);
+    }
+
+    public bool IsPlaying()
+    {
+        if (IsDelayed)
+            return true;
+
+        return m_audioSource.isPlaying;
+    }
+
+    public AudioClip clip
+    {
+        get { return m_audioSource.clip; }
+        set { m_audioSource.clip = value;}
+    }
+
+    public void Play()
+    {
+        m_audioSource.Play();
+    }
+
+    public void PlayDelayed(float delayTime)
+    {
+        IsDelayed = true;
+        DelayTimeRemaining = delayTime;
     }
 }

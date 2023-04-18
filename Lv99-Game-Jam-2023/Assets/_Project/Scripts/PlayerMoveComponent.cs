@@ -110,7 +110,7 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
             if (CurrentVerticalVelocity < -0.5f && m_onLandingImpulseSource != null)
             {
-                var _impulseVelocity = 0.015f * new Vector3(
+                var _impulseVelocity = 0.01f * new Vector3(
                     0f,
                     CurrentVerticalVelocity,
                     0f);
