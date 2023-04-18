@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2274970776542757946
+--- !u!114 &-1348981446928813079
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}
@@ -20,11 +20,16 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: fog
-  m_Shader: {fileID: -6465566751694194690, guid: 533e6b0d0656d48439c9cfabbe8a0ae2,
+  m_Name: glow
+  m_Shader: {fileID: -6465566751694194690, guid: a91d44e00c8685f4784be6b282ab8cf2,
     type: 3}
-  m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_ValidKeywords:
+  - USE_BIG_SCANLINE
+  - USE_EDGE_GLOW
+  m_InvalidKeywords:
+  - USE_COLLISION_RIPPLES
+  - USE_HEXAGON_GLOW
+  - USE_INTERSECTION
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -58,6 +63,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _HexagonTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MainTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -71,6 +80,10 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScanlineTexture:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -92,7 +105,17 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - USE_BIG_SCANLINE: 1
+    - USE_COLLISION_RIPPLES: 1
+    - USE_EDGE_GLOW: 1
+    - USE_HEXAGON_GLOW: 1
+    - USE_INTERSECTION: 1
+    - USE_SCANLINES: 0
     - _AlphaClip: 0
+    - _AspectRatio: 0.5
+    - _BigScanlineSpeed: 1.21
+    - _BigScanlineStrength: 1
+    - _BigScanlineThickness: 1.74
     - _Blend: 0
     - _BumpScale: 1
     - _ClearCoatMask: 0
@@ -102,17 +125,27 @@ Material:
     - _DetailAlbedoMapScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
+    - _EdgeGlowStrength: 0.829
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _GlowNoiseScale: 1
+    - _GlowSpeed: 4
+    - _Heightmap_Strength: 0.01
+    - _IntersectionStrength: 1
+    - _IntersectionThickness: 0.1
     - _Metallic: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.005
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Smoothness: 0.5
+    - _RippleSpeed: 1
+    - _RippleThickness: 0.05
+    - _RippleTime: 0.44
+    - _ScanlineStrength: 0
+    - _Smoothness: 0.991
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
@@ -120,9 +153,12 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _BaseColor: {r: 0.19297862, g: 0.18654324, b: 0.3773585, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
-    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _FogColor: {r: 0.7505874, g: 0.7526973, b: 0.7924528, a: 1}
+    - _EdgeGlowThickness: {r: 0.65, g: 0.99, b: 0, a: 0}
+    - _EmissionColor: {r: 0.2980598, g: 0.31936193, b: 0.8018868, a: 1}
+    - _GlowStrengthMinMax: {r: 0, g: 0.25, b: 0, a: 0}
+    - _RippleOrigin: {r: 0.49, g: 0.43, b: 0, a: 0}
+    - _ScrollVelocity: {r: 0, g: 0.1, b: 0, a: 0}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
   m_BuildTextureStacks: []
