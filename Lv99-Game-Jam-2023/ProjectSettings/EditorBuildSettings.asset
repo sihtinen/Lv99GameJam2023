@@ -11,4 +11,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Game_Level_02-Melee_02.unity
     guid: 22f7ae4e3b635ef4db157de84933943e
+  - enabled: 1
+    path: Assets/_Project/Scenes/Game_Level_03-Jump_01.unity
+    guid: 8c1db570231a3cf408106409e0f4afca
+  - enabled: 1
+    path: Assets/_Project/Scenes/Game_Level_04-Jump_02.unity
+    guid: 4f30aaff2e617ef4187a563f9d0b69fd
+  - enabled: 1
+    path: Assets/_Project/Scenes/Game_Level_05-Jump_03.unity
+    guid: 052079411b8b9174aa9259f42d318ee4
   m_configObjects: {}

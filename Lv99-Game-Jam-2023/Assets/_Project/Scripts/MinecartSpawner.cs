@@ -8,6 +8,7 @@ public class MinecartSpawner : PuzzleBehaviour
     [SerializeField] private float m_spawnFrequencySeconds = 3.5f;
     [SerializeField] private float m_initialSpawnWaitTime = 3.5f;
     [SerializeField, Range(0f, 1f)] private float m_startSpeedNormalized = 1f;
+    [SerializeField] private float m_spawnerFreeSpaceRequired = 5f;
 
     [Header("Object References")]
     [SerializeField] private Minecart m_minecartPrefab = null;
@@ -57,6 +58,14 @@ public class MinecartSpawner : PuzzleBehaviour
             return;
 
         m_spawnWaitTime += m_spawnFrequencySeconds;
+
+        for (int i = 0; i < m_activeMinecarts.Count; i++)
+        {
+            var _activeCart = m_activeMinecarts[i];
+
+            if (Vector3.Distance(transform.position, _activeCart.transform.position) < m_spawnerFreeSpaceRequired)
+                return;
+        }
 
         var _newCart = getNewMinecart();
         _newCart.transform.SetPositionAndRotation(transform.position, transform.rotation);

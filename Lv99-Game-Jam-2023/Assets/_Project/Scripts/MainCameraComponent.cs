@@ -4,10 +4,20 @@ using System.Collections.Generic;
 
 using UnityEngine;
 
+using Cinemachine;
+
 public class MainCameraComponent : SingletonBehaviour<MainCameraComponent>
 {
     [NonSerialized] public Vector3 HorizontalForwardDirection;
     [NonSerialized] public Vector3 HorizontalRightDirection;
+
+    private void Start()
+    {
+        var _cinemachineImpulseManager = CinemachineImpulseManager.Instance;
+
+        if (_cinemachineImpulseManager != null)
+            _cinemachineImpulseManager.IgnoreTimeScale = true;
+    }
 
     private void Update()
     {

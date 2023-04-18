@@ -23,18 +23,19 @@ public class Railroad : MonoBehaviour
         {
             var _path = m_cmSmoothPaths[i];
 
-            for (int ii = 0; ii < _path.m_Waypoints.Length; ii++)
-            {
-                var _waypoint = _path.m_Waypoints[ii];
+            var _startSocket = new RailroadSocket();
+            _startSocket.WorldPosition = _path.transform.TransformPoint(_path.m_Waypoints[0].position);
+            _startSocket.RailroadComponent = this;
+            _startSocket.Path = _path;
+            m_mySockets.Add(_startSocket);
+            ObjectCollection<RailroadSocket>.RegisterObject(_startSocket);
 
-                var _socket = new RailroadSocket();
-                _socket.WorldPosition = transform.TransformPoint(_waypoint.position);
-                _socket.RailroadComponent = this;
-                _socket.Path = _path;
-                m_mySockets.Add(_socket);
-
-                ObjectCollection<RailroadSocket>.RegisterObject(_socket);
-            }
+            var _endSocket = new RailroadSocket();
+            _endSocket.WorldPosition = _path.transform.TransformPoint(_path.m_Waypoints[_path.m_Waypoints.Length - 1].position);
+            _endSocket.RailroadComponent = this;
+            _endSocket.Path = _path;
+            m_mySockets.Add(_endSocket);
+            ObjectCollection<RailroadSocket>.RegisterObject(_endSocket);
         }
     }
 
@@ -62,6 +63,9 @@ public class Railroad : MonoBehaviour
 
                 if (_distance > 0.1f)
                     continue;
+
+                if (Application.isEditor)
+                    Debug.DrawLine(_socket.RailroadComponent.transform.position, _otherSocket.RailroadComponent.transform.position, Color.green, 15.0f);
 
                 if (_socket.ConnectedSockets.Contains(_otherSocket) == false)
                     _socket.ConnectedSockets.Add(_otherSocket);

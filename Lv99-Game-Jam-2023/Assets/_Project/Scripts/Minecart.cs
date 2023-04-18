@@ -158,12 +158,19 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
     private void updateNonRailroadMovement()
     {
-        if (checkBelow(checkDistance: Mathf.Max(VerticalVelocity * Time.deltaTime, 0.1f)))
+        bool _groundBelow = checkBelow(checkDistance: Mathf.Max(VerticalVelocity * Time.deltaTime, 0.1f));
+
+        if (_groundBelow)
         {
             VerticalVelocity = 0f;
         }
         else
         {
+            if (AccelerationTime > 0f)
+                AccelerationTime -= Time.deltaTime * AccelerationDuration;
+            else
+                AccelerationTime = 0f;
+
             if (VerticalVelocity < MaxFallVelocity)
                 VerticalVelocity += Time.deltaTime * FallVelocityAcceleration;
             else
@@ -261,6 +268,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
         if (_closestRailroad == null)
             return;
+
+        AccelerationTime *= 0.3f;
 
         IsOnRailroad = true;
         CurrentRailroad = _closestRailroad;
