@@ -4,14 +4,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class LogBridge : PuzzleBehaviour, IMeleeTarget
+public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 {
+    [SerializeField] private bool m_isCollapsedByDefault = false;
+    [SerializeField] private int m_initialCollapsedHealth = 3;
     [SerializeField] private float m_animationSpeed = 1.0f;
     [SerializeField] private Collider m_collider = null;
     [SerializeField] private PlayableDirector m_director = null;
 
+    private int m_currentHealth;
+
+    private void Start()
+    {
+        ResetPuzzleState();
+    }
+
     public void OnHit(Vector3 playerPosition)
     {
+        if (m_isCollapsedByDefault)
+            return;
+
         if (m_collider != null)
             m_collider.enabled = false;
 
@@ -25,20 +37,35 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget
     public override void ResetPuzzleState()
     {
         if (m_collider != null)
-            m_collider.enabled = true;
+            m_collider.enabled = m_isCollapsedByDefault == false;
+
+        m_currentHealth = m_initialCollapsedHealth;
+
+        gameObject.SetActiveOptimized(true);
 
         m_director.Stop();
-        m_director.time = 0;
+        m_director.time = m_isCollapsedByDefault ? m_director.duration : 0f;
         m_director.Evaluate();
     }
 
-    private IEnumerator coroutine_playAnimation()
+    bool IMinecartObstacle.IsActive()
     {
-        while (m_director.time < m_director.duration)
+        return gameObject.activeInHierarchy && m_director.time >= m_director.duration;
+    }
+
+    IMinecartObstacle.CollisionResults IMinecartObstacle.OnCollision(Minecart minecart)
+    {
+        var _results = new IMinecartObstacle.CollisionResults();
+        _results.IsPathBlocked = true;
+
+        m_currentHealth--;
+
+        if (m_currentHealth <= 0)
         {
-            yield return null;
-            m_director.time += Time.deltaTime * m_animationSpeed;
-            m_director.Evaluate();
+            gameObject.SetActiveOptimized(false);
+            _results.IsPathBlocked = false;
         }
+
+        return _results;
     }
 }

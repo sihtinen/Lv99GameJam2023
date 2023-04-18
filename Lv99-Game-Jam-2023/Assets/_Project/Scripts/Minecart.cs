@@ -7,7 +7,7 @@ using UnityEngine;
 using Cinemachine;
 
 [DefaultExecutionOrder(-1)]
-public class Minecart : PuzzleBehaviour, IMeleeTarget
+public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 {
     public MinecartState InitialState = new MinecartState();
 
@@ -19,15 +19,19 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
     public float MaxFallVelocity = 8f;
     public float FallVelocityAcceleration = 3f;
 
+    [Header("Object References")]
+    [SerializeField] private CinemachineImpulseSource m_collisionImpulseSource = null;
+
     [NonSerialized] public bool IsOnRailroad = false;
     [NonSerialized] public bool IsMoving = false;
-    [NonSerialized] public bool IsPooled = false;
     [NonSerialized] public float RailPathPosition;
     [NonSerialized] public float AccelerationTime = 0f;
     [NonSerialized] public float VerticalVelocity = 0f;
     [NonSerialized] public Railroad CurrentRailroad = null;
     [NonSerialized] public CinemachineSmoothPath CurrentPath = null;
-
+    [NonSerialized] public MinecartSpawner SourceSpawner = null;
+    [NonSerialized] IMinecartObstacle CurrentObstacle = null;
+     
     private bool m_isPathReversed = false;
     private BoxCollider m_boxCollider = null;
     private List<Railroad> m_collidedRailroads = new List<Railroad>();
@@ -46,6 +50,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
     {
         transform.position = InitialState.Position;
         transform.rotation = InitialState.Rotation;
+
+        CurrentObstacle = null;
 
         IsMoving = InitialState.IsMoving;
         AccelerationTime = InitialState.AccelerationCurvePos * AccelerationDuration;
@@ -172,12 +178,10 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
 
         if (transform.position.y < -40)
         {
-            if (IsPooled)
-            {
+            gameObject.SetActiveOptimized(false);
 
-            }
-            else
-                gameObject.SetActiveOptimized(false);
+            if (SourceSpawner != null)
+                SourceSpawner.ReturnToPool(this);
         }
     }
 
@@ -282,6 +286,59 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget
         _result += _speed * transform.forward;
         _result -= VerticalVelocity * Vector3.up;
         return _result;
+    }
+
+    public void OnCollidedWithObstacle(IMinecartObstacle obstacle)
+    {
+        if (CurrentObstacle != null)
+            return;
+
+        float _accelerationCurveVal = AccelerationCurve.Evaluate(AccelerationTime / AccelerationDuration);
+        float _speed = MaxSpeed * _accelerationCurveVal;
+        m_collisionImpulseSource.GenerateImpulseWithVelocity(_speed * transform.forward);
+
+        IsMoving = false;
+        AccelerationTime = 0;
+        VerticalVelocity = 0;
+        CurrentObstacle = obstacle;
+        CurrentObstacle.OnCollision(this);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.transform.root.TryGetComponent(out IMinecartObstacle _obstacle))
+        {
+            if (_obstacle.IsActive())
+                OnCollidedWithObstacle(_obstacle);
+        }
+    }
+
+    bool IMinecartObstacle.IsActive()
+    {
+        return IsMoving == false;
+    }
+
+    IMinecartObstacle.CollisionResults IMinecartObstacle.OnCollision(Minecart minecart)
+    {
+        var _results = new IMinecartObstacle.CollisionResults();
+        _results.IsPathBlocked = true;
+
+        if (CurrentObstacle != null)
+        {
+            var _frontCollision = CurrentObstacle.OnCollision(this);
+
+            if (_frontCollision.IsPathBlocked == false)
+                CurrentObstacle = null;
+        }
+        else
+        {
+            _results.IsPathBlocked = false;
+
+            IsMoving = true;
+            AccelerationTime = 0f;
+        }
+
+        return _results;
     }
 
     [System.Serializable]
