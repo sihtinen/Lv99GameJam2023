@@ -3,12 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Events;
 
 [DefaultExecutionOrder(-1)]
 public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
 {
     [Header("Object References")]
     [SerializeField] private GameObject m_renderMeshRootObj = null;
+
+    [Header("Unity Events")]
+    public UnityEvent OnTakeDamage = new();
 
     [NonSerialized] public bool AllowMovement = false;
     [NonSerialized] public bool AllowJump = false;
@@ -137,5 +141,10 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
     public bool HasAnyUsesLeft()
     {
         return JumpUses > 0 || MeleeUses > 0;
+    }
+
+    public void TakeDamage()
+    {
+        OnTakeDamage?.Invoke();
     }
 }

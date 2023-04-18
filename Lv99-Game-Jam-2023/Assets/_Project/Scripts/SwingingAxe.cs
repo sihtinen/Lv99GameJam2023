@@ -60,6 +60,8 @@ public class SwingingAxe : PuzzleBehaviour
         if (other.transform.root.TryGetComponent(out PlayerCharacter _player) == false)
             return;
 
+        _player.TakeDamage();
+
         m_impulseSource.GenerateImpulseAt(_player.transform.position, UnityEngine.Random.insideUnitSphere.normalized);
 
         HitStop.Play(m_hitStopTimeScale, m_hitStopDuration);

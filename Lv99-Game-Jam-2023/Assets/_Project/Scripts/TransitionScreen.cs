@@ -20,6 +20,7 @@ public class TransitionScreen : SingletonBehaviour<TransitionScreen>
 
     [NonSerialized] public bool AllowTransition = true;
     [NonSerialized] public bool IsTransitionActive = false;
+    [NonSerialized] public float TransitionFillAmount = 0f;
 
     private Canvas m_canvas = null;
     private Coroutine m_transitionCoroutine = null;
@@ -43,6 +44,7 @@ public class TransitionScreen : SingletonBehaviour<TransitionScreen>
     private IEnumerator coroutine_performScreenFade()
     {
         IsTransitionActive = true;
+        TransitionFillAmount = 0f;
 
         float _timer = 0f;
 
@@ -57,6 +59,7 @@ public class TransitionScreen : SingletonBehaviour<TransitionScreen>
 
             _timer += Time.unscaledDeltaTime;
             float _animPos = _timer / m_fadeDuration;
+            TransitionFillAmount = _animPos;
 
             m_fillRect.anchorMin = Vector2.Lerp(m_anchorMin_StartTransition, Vector2.zero, _animPos);
             m_fillRect.anchorMax = Vector2.Lerp(m_anchorMax_StartTransition, Vector2.one, _animPos);
@@ -67,6 +70,7 @@ public class TransitionScreen : SingletonBehaviour<TransitionScreen>
         m_fillRect.anchorMax = Vector2.one;
         m_fillRect.anchoredPosition = Vector2.zero;
 
+        TransitionFillAmount = 1f;
         AllowTransition = true;
         OnScreenObscured?.Invoke();
 
@@ -81,6 +85,7 @@ public class TransitionScreen : SingletonBehaviour<TransitionScreen>
 
             _timer += Time.unscaledDeltaTime;
             float _animPos = _timer / m_fadeDuration;
+            TransitionFillAmount = 1.0f - _animPos;
 
             m_fillRect.anchorMin = Vector2.Lerp(Vector2.zero, m_anchorMin_EndTransition, _animPos);
             m_fillRect.anchorMax = Vector2.Lerp(Vector2.one, m_anchorMax_EndTransition, _animPos);
@@ -89,6 +94,7 @@ public class TransitionScreen : SingletonBehaviour<TransitionScreen>
 
         m_canvas.enabled = false;
         IsTransitionActive = false;
+        TransitionFillAmount = 0f;
         m_transitionCoroutine = null;
     }
 }

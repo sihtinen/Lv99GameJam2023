@@ -10,6 +10,8 @@ public class KillPlane : MonoBehaviour
         if (other.transform.root.TryGetComponent(out PlayerCharacter _player) == false)
             return;
 
+        _player.TakeDamage();
+
         var _meditationSystem = MeditationSystem.Instance;
         if (_meditationSystem == null)
             return;
