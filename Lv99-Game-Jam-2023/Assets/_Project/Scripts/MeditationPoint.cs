@@ -11,6 +11,7 @@ public class MeditationPoint : MonoBehaviour
     [Header("Puzzle Settings")]
     public bool IsJumpAvailable = false;
     public bool IsMeleeAvailable = false;
+    public bool IsInhaleAvailable = false;
     [Min(1)] public int AbilityCount = 3;
 
     [Header("Object References")]

@@ -115,7 +115,7 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
             drawBox(
                 pos: _hitOrigin + m_hitCheckDistance * transform.forward,
                 rot: transform.rotation,
-                scale: m_hitBoxHalfExtents,
+                scale: 2f * m_hitBoxHalfExtents,
                 c: Color.red,
                 time: 5f);
         }

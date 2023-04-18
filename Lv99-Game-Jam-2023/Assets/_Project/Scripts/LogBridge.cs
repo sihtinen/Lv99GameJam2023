@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Playables;
 
-public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
+public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle, IInhaleTarget
 {
     [SerializeField] private bool m_isCollapsedByDefault = false;
     [SerializeField] private int m_initialCollapsedHealth = 3;
@@ -67,5 +67,19 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         }
 
         return _results;
+    }
+
+    public void OnInhaleHit(Vector3 playerPosition)
+    {
+        if (m_director.time > 0)
+            return;
+
+        Vector3 _toPlayer = playerPosition - transform.position;
+        float _forwardDot = Vector3.Dot(_toPlayer.normalized, transform.forward);
+
+        if (_forwardDot < 0.5f)
+            return;
+
+        OnHit(playerPosition);
     }
 }

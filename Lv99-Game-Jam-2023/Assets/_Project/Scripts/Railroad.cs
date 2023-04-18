@@ -90,8 +90,10 @@ public class Railroad : MonoBehaviour
     {
         for (int i = 0; i < m_cmSmoothPaths.Count; i++)
         {
-            if (m_cmSmoothPaths[i].enabled)
-                return m_cmSmoothPaths[i];
+            var _path = m_cmSmoothPaths[i];
+
+            if (_path.enabled)
+                return _path;
         }
 
         return null;

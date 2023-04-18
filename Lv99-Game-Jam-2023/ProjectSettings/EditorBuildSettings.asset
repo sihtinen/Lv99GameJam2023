@@ -20,4 +20,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Game_Level_05-Jump_03.unity
     guid: 052079411b8b9174aa9259f42d318ee4
+  - enabled: 1
+    path: Assets/_Project/Scenes/Game_Level_06-Inhale_01.unity
+    guid: c6a8dc4182a691b4c82f1153f39e3430
   m_configObjects: {}

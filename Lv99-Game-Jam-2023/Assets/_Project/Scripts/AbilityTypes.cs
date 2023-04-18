@@ -7,6 +7,6 @@ public enum AbilityTypes
 {
     Jump = 0,
     Melee = 1,
-    Ability3 = 2,
+    Inhale = 2,
     Ability4 = 3,
 }

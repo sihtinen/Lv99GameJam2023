@@ -45,15 +45,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_isPersistentObject: 0
-  m_isJumpAvailable: 1
-  m_isMeleeAvailable: 1
-  m_abilityCount: 3
   m_minigameSuccessWindowHalf: 0.2
+  m_debugSkipMinigames: 0
   m_jumpActionRef: {fileID: -5520167389686494168, guid: d41352ead7d06444ca3bbcfb7400ba6f,
     type: 3}
   m_meleeActionRef: {fileID: 6799444315234072050, guid: d41352ead7d06444ca3bbcfb7400ba6f,
     type: 3}
   m_breathActionRef: {fileID: -2556910469973460844, guid: d41352ead7d06444ca3bbcfb7400ba6f,
+    type: 3}
+  m_inhaleActionRef: {fileID: 6914676432405854548, guid: d41352ead7d06444ca3bbcfb7400ba6f,
     type: 3}
   m_jumpMinigameCollection: {fileID: 11400000, guid: afec355eae3987848a420e8124701bb7,
     type: 2}

@@ -259,6 +259,7 @@ GameObject:
   - component: {fileID: 4753841781666251979}
   - component: {fileID: 4753841781666251980}
   - component: {fileID: 4753841781666251978}
+  - component: {fileID: 2571137019837608928}
   m_Layer: 0
   m_Name: Player Character
   m_TagString: Untagged
@@ -381,7 +382,7 @@ MonoBehaviour:
   m_isPersistentObject: 0
   m_meleeDuration: 0.8
   m_meleeHitTimeNormalized: 0.4
-  m_hitBoxHalfExtents: {x: 1, y: 2, z: 1}
+  m_hitBoxHalfExtents: {x: 0.5, y: 1, z: 0.5}
   m_hitCheckDistance: 1
   m_hitLayers:
     serializedVersion: 2
@@ -393,6 +394,22 @@ MonoBehaviour:
   m_meleeActionRef: {fileID: 6799444315234072050, guid: d41352ead7d06444ca3bbcfb7400ba6f,
     type: 3}
   m_meleeHitImpulseSource: {fileID: 7438276804680625840}
+--- !u!114 &2571137019837608928
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4753841781666252018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17286e865898f644580c5caa66d6f518, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_isPersistentObject: 0
+  m_collisionStartTime: 0.6
+  m_inhaleActionRef: {fileID: 6914676432405854548, guid: d41352ead7d06444ca3bbcfb7400ba6f,
+    type: 3}
 --- !u!1 &4753841781982492301
 GameObject:
   m_ObjectHideFlags: 0

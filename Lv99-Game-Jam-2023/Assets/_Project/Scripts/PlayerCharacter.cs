@@ -13,13 +13,16 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
     [NonSerialized] public bool AllowMovement = false;
     [NonSerialized] public bool AllowJump = false;
     [NonSerialized] public bool AllowMelee = false;
+    [NonSerialized] public bool AllowInhale = false;
 
     [NonSerialized] public int JumpUses = 0;
     [NonSerialized] public int MeleeUses = 0;
+    [NonSerialized] public int InhaleUses = 0;
 
     private bool m_meditationLayersActive = false;
     private PlayerMoveComponent m_moveComponent = null;
     private PlayerMeleeComponent m_meleeComponent = null;
+    private PlayerInhaleComponent m_inhaleComponent = null;
 
     protected override void Awake()
     {
@@ -27,6 +30,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
 
         TryGetComponent(out m_moveComponent);
         TryGetComponent(out m_meleeComponent);
+        TryGetComponent(out m_inhaleComponent);
     }
 
     private void Update()
@@ -34,9 +38,18 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
         AllowMovement = true;
         AllowJump = JumpUses > 0;
         AllowMelee = MeleeUses > 0;
+        AllowInhale = InhaleUses > 0;
 
         if (m_moveComponent.IsGrounded == false)
         {
+            AllowMelee = false;
+            AllowInhale = false;
+        }
+
+        if (m_inhaleComponent.IsInhaling)
+        {
+            AllowMovement = false;
+            AllowJump = false;
             AllowMelee = false;
         }
 
@@ -44,6 +57,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
         {
             AllowMovement = false;
             AllowJump = false;
+            AllowMelee = false;
         }
 
         var _meditationSystem = MeditationSystem.Instance;
@@ -52,6 +66,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             AllowMovement = false;
             AllowJump = false;
             AllowMelee = false;
+            AllowInhale = false;
 
             if (m_meditationLayersActive == false)
                 enableMeditationCameraLayer();
@@ -67,6 +82,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
                 AllowMovement = false;
                 AllowJump = false;
                 AllowMelee = false;
+                AllowInhale = false;
             }
 
             if (m_meditationLayersActive && _playerCamera != null && _playerCamera.IsAnimating() == false)
@@ -84,7 +100,8 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             case AbilityTypes.Melee:
                 MeleeUses--;
                 break;
-            case AbilityTypes.Ability3:
+            case AbilityTypes.Inhale:
+                InhaleUses--;
                 break;
             case AbilityTypes.Ability4:
                 break;
