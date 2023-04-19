@@ -11,6 +11,7 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle, IInha
     [SerializeField] private float m_animationSpeed = 1.0f;
     [SerializeField] private Collider m_collider = null;
     [SerializeField] private PlayableDirector m_director = null;
+    [SerializeField] private LogBridgeAudioPlayer m_audioPlayer = null;
 
     private int m_currentHealth;
 
@@ -32,6 +33,9 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle, IInha
 
         m_director.playableGraph.GetRootPlayable(0).SetSpeed(m_animationSpeed);
         m_director.Play();
+
+        m_audioPlayer.gameObject.SetActiveOptimized(true);
+        m_audioPlayer.Play();
     }
 
     public override void ResetPuzzleState()
@@ -81,5 +85,8 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle, IInha
             return;
 
         OnHit(playerPosition);
+
+        m_audioPlayer.gameObject.SetActiveOptimized(true);
+        m_audioPlayer.Play();
     }
 }

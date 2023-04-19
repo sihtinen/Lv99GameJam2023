@@ -15,6 +15,7 @@ public class RailroadSwitch : PuzzleBehaviour, IMeleeTarget, IInhaleTarget
     [SerializeField] private CinemachineSmoothPath m_leftPath = null;
     [SerializeField] private CinemachineSmoothPath m_rightPath = null;
     [SerializeField] private Transform m_rotatePivot = null;
+    [SerializeField] private RailroadSwitchAudioPlayer m_audioPlayer = null;
 
     private SwitchDirection m_currentDirection = SwitchDirection.Left;
 
@@ -71,6 +72,9 @@ public class RailroadSwitch : PuzzleBehaviour, IMeleeTarget, IInhaleTarget
                 {
                     m_currentDirection = SwitchDirection.Right;
                     updatePathStates();
+
+                    m_audioPlayer.gameObject.SetActiveOptimized(true);
+                    m_audioPlayer.Play();
                 }
 
                 break;
@@ -80,6 +84,9 @@ public class RailroadSwitch : PuzzleBehaviour, IMeleeTarget, IInhaleTarget
                 {
                     m_currentDirection = SwitchDirection.Left;
                     updatePathStates();
+
+                    m_audioPlayer.gameObject.SetActiveOptimized(true);
+                    m_audioPlayer.Play();
                 }
 
                 break;
