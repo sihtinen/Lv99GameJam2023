@@ -6,10 +6,7 @@ using UnityEngine;
 public interface IMinecartObstacle
 {
     public bool IsActive();
-    public CollisionResults OnCollision(Minecart minecart);
-
-    public struct CollisionResults
-    {
-        public bool IsPathBlocked;
-    }
+    public bool IsStationary();
+    public Vector3 Position { get; }
+    public void Collision(Minecart minecart);
 }

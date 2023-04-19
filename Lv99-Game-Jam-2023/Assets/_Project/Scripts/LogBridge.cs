@@ -15,6 +15,8 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle, IInha
 
     private int m_currentHealth;
 
+    Vector3 IMinecartObstacle.Position => transform.position;
+
     private void Start()
     {
         ResetPuzzleState();
@@ -57,20 +59,9 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle, IInha
         return gameObject.activeInHierarchy && m_director.time >= m_director.duration;
     }
 
-    IMinecartObstacle.CollisionResults IMinecartObstacle.OnCollision(Minecart minecart)
+    bool IMinecartObstacle.IsStationary()
     {
-        var _results = new IMinecartObstacle.CollisionResults();
-        _results.IsPathBlocked = true;
-
-        m_currentHealth--;
-
-        if (m_currentHealth <= 0)
-        {
-            gameObject.SetActiveOptimized(false);
-            _results.IsPathBlocked = false;
-        }
-
-        return _results;
+        return m_currentHealth > 0;
     }
 
     public void OnInhaleHit(Vector3 playerPosition)
@@ -88,5 +79,13 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle, IInha
 
         m_audioPlayer.gameObject.SetActiveOptimized(true);
         m_audioPlayer.Play();
+    }
+
+    public void Collision(Minecart minecart)
+    {
+        m_currentHealth--;
+
+        if (m_currentHealth <= 0)
+            gameObject.SetActiveOptimized(false);
     }
 }

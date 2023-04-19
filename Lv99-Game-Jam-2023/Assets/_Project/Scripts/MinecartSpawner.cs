@@ -17,17 +17,18 @@ public class MinecartSpawner : PuzzleBehaviour
     private float m_spawnWaitTime = 0f;
 
     private List<Minecart> m_activeMinecarts = new();
-    private Stack<Minecart> m_minecartPool = new();
+    private List<Minecart> m_minecartPool = new();
 
     private void Awake()
     {
         for (int i = 0; i < 8; i++)
         { 
             var _minecartObj = Instantiate(m_minecartPrefab.gameObject, parent: null);
+            _minecartObj.name = $"{gameObject.name}_Minecart-{i.ToStringMinimalAlloc()}";
             _minecartObj.SetActiveOptimized(false);
             _minecartObj.TryGetComponent(out Minecart _minecart);
             _minecart.SourceSpawner = this;
-            m_minecartPool.Push(_minecart);
+            m_minecartPool.Add(_minecart);
         }
     }
 
@@ -43,8 +44,11 @@ public class MinecartSpawner : PuzzleBehaviour
         for (int i = 0; i < m_activeMinecarts.Count; i++)
         {
             var _minecart = m_activeMinecarts[i];
+            _minecart.ResetPuzzleState();
             _minecart.gameObject.SetActiveOptimized(false);
-            m_minecartPool.Push(_minecart);
+
+            if (m_minecartPool.Contains(_minecart) == false)
+                m_minecartPool.Add(_minecart);
         }
 
         m_activeMinecarts.Clear();
@@ -68,6 +72,8 @@ public class MinecartSpawner : PuzzleBehaviour
         }
 
         var _newCart = getNewMinecart();
+        m_activeMinecarts.Add(_newCart);
+
         _newCart.transform.SetPositionAndRotation(transform.position, transform.rotation);
         _newCart.AccelerationTime = m_startSpeedNormalized * _newCart.AccelerationDuration;
         _newCart.VerticalVelocity = 0f;
@@ -85,7 +91,11 @@ public class MinecartSpawner : PuzzleBehaviour
     private Minecart getNewMinecart()
     {
         if (m_minecartPool.Count > 0)
-            return m_minecartPool.Pop();
+        {
+            var _result = m_minecartPool[m_minecartPool.Count - 1];
+            m_minecartPool.Remove(_result);
+            return _result;
+        }
 
         var _minecartObj = Instantiate(m_minecartPrefab.gameObject, parent: null);
         _minecartObj.SetActiveOptimized(false);
@@ -96,7 +106,10 @@ public class MinecartSpawner : PuzzleBehaviour
 
     public void ReturnToPool(Minecart minecart)
     {
-        m_activeMinecarts.Remove(minecart);
-        m_minecartPool.Push(minecart);
+        if (m_activeMinecarts.Contains(minecart))
+            m_activeMinecarts.Remove(minecart);
+
+        if (m_minecartPool.Contains(minecart) == false)
+            m_minecartPool.Add(minecart);
     }
 }

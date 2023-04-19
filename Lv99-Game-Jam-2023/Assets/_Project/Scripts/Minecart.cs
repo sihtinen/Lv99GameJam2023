@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.Events;
 
 using Cinemachine;
-using UnityEngine.Events;
-using System.Runtime.Remoting.Messaging;
+
 
 [DefaultExecutionOrder(-1)]
 public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
@@ -35,7 +35,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
     [NonSerialized] public Railroad CurrentRailroad = null;
     [NonSerialized] public CinemachineSmoothPath CurrentPath = null;
     [NonSerialized] public MinecartSpawner SourceSpawner = null;
-    [NonSerialized] IMinecartObstacle CurrentObstacle = null;
+
+    [NonSerialized] IMinecartObstacle InFrontObstacle = null;
 
     private bool m_isPathReversed = false;
     private BoxCollider m_boxCollider = null;
@@ -56,7 +57,7 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         transform.position = InitialState.Position;
         transform.rotation = InitialState.Rotation;
 
-        CurrentObstacle = null;
+        InFrontObstacle = null;
 
         IsMoving = InitialState.IsMoving;
         AccelerationTime = InitialState.AccelerationCurvePos * AccelerationDuration;
@@ -196,10 +197,12 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
         if (transform.position.y < -40)
         {
-            gameObject.SetActiveOptimized(false);
+            InFrontObstacle = null;
 
             if (SourceSpawner != null)
                 SourceSpawner.ReturnToPool(this);
+
+            gameObject.SetActiveOptimized(false);
         }
     }
 
@@ -308,57 +311,60 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         return _result;
     }
 
-    public void OnCollidedWithObstacle(IMinecartObstacle obstacle)
+    private void OnTriggerEnter(Collider other)
     {
-        if (CurrentObstacle != null)
+        if (other.transform.root.TryGetComponent(out IMinecartObstacle _obstacle) == false)
+            return;
+
+        if (_obstacle.IsActive() == false)
             return;
 
         float _accelerationCurveVal = AccelerationCurve.Evaluate(AccelerationTime / AccelerationDuration);
         float _speed = MaxSpeed * _accelerationCurveVal;
         m_collisionImpulseSource.GenerateImpulseWithVelocity(_speed * transform.forward);
 
-        IsMoving = false;
         AccelerationTime = 0;
-        VerticalVelocity = 0;
-        CurrentObstacle = obstacle;
-        CurrentObstacle.OnCollision(this);
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.transform.root.TryGetComponent(out IMinecartObstacle _obstacle))
+        if (IsOnRailroad && InFrontObstacle == null)
         {
-            if (_obstacle.IsActive())
-                OnCollidedWithObstacle(_obstacle);
+            Vector3 _toObstacle = (_obstacle.Position - transform.position).normalized;
+            bool _isFront = Vector3.Dot(_toObstacle, transform.forward) >= 0f;
+
+            if (_isFront)
+            {
+                IsMoving = false;
+                InFrontObstacle = _obstacle;
+                InFrontObstacle.Collision(this);
+            }
         }
     }
 
     bool IMinecartObstacle.IsActive()
     {
-        return IsMoving == false;
+        return true;
     }
 
-    IMinecartObstacle.CollisionResults IMinecartObstacle.OnCollision(Minecart minecart)
+    Vector3 IMinecartObstacle.Position => transform.position;
+
+    void IMinecartObstacle.Collision(Minecart minecart)
     {
-        var _results = new IMinecartObstacle.CollisionResults();
-        _results.IsPathBlocked = true;
-
-        if (CurrentObstacle != null)
+        if (InFrontObstacle == null)
         {
-            var _frontCollision = CurrentObstacle.OnCollision(this);
-
-            if (_frontCollision.IsPathBlocked == false)
-                CurrentObstacle = null;
-        }
-        else
-        {
-            _results.IsPathBlocked = false;
-
             IsMoving = true;
             AccelerationTime = 0f;
         }
+        else
+        {
+            InFrontObstacle.Collision(this);
 
-        return _results;
+            if (InFrontObstacle.IsStationary() == false)
+                InFrontObstacle = null;
+        }
+    }
+
+    bool IMinecartObstacle.IsStationary()
+    {
+        return IsMoving == false;
     }
 
     [System.Serializable]

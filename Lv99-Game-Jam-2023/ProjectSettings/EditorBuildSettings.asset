@@ -29,4 +29,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Project/Scenes/Game_Level_07-Inhale_02.unity
     guid: 17792611c0e9ec749a3ff094275bfde5
+  - enabled: 1
+    path: Assets/_Project/Scenes/Game_Level_08-Timestop_01.unity
+    guid: bafd1f13640271c4598d3b6e2e3ceb3e
+  - enabled: 1
+    path: Assets/_Project/Scenes/Game_Level_09-Timestop_02.unity
+    guid: 7d6455abeca015a4e93576581105dc92
   m_configObjects: {}
