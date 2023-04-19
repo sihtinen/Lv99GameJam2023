@@ -52,7 +52,7 @@ public class MinecartSpawner : PuzzleBehaviour
 
     private void Update()
     {
-        m_spawnWaitTime -= Time.deltaTime;
+        m_spawnWaitTime -= GameTime.DeltaTime(TimeChannel.Environment);
 
         if (m_spawnWaitTime > 0f)
             return;

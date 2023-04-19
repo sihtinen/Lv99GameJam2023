@@ -69,7 +69,7 @@ public class PlayerCharacterCamera : SingletonBehaviour<PlayerCharacterCamera>
         while (m_cameraBlend < 1f)
         {
             yield return null;
-            m_cameraBlend += Time.deltaTime / m_transitionLength_In;
+            m_cameraBlend += GameTime.DeltaTime(TimeChannel.Player) / m_transitionLength_In;
         }
 
         m_cameraBlend = 1f;
@@ -81,7 +81,7 @@ public class PlayerCharacterCamera : SingletonBehaviour<PlayerCharacterCamera>
         while (m_cameraBlend > 0f)
         {
             yield return null;
-            m_cameraBlend -= Time.deltaTime / m_transitionLength_Out;
+            m_cameraBlend -= GameTime.DeltaTime(TimeChannel.Player) / m_transitionLength_Out;
         }
 
         m_cameraBlend = 0f;

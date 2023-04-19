@@ -31,10 +31,12 @@ public class MeditationAudioManager : AudioSourceManagerBase<MeditationAudioMana
         if (_meditationSystem == null)
             return;
 
+        float _deltaTime = GameTime.DeltaTime(TimeChannel.Player);
+
         float _targetPrimaryVolume = _meditationSystem.IsPlayerMeditating ? m_primaryLoopMaxVolume : 0.0f;
 
         float _primaryVolumeSeekSpeed = _targetPrimaryVolume > m_audioLoopPrimary.volume ? 0.9f : 1.5f;
-        m_audioLoopPrimary.volume = Mathf.Lerp(m_audioLoopPrimary.volume, _targetPrimaryVolume, Time.deltaTime * _primaryVolumeSeekSpeed);
+        m_audioLoopPrimary.volume = Mathf.Lerp(m_audioLoopPrimary.volume, _targetPrimaryVolume, _deltaTime * _primaryVolumeSeekSpeed);
 
         if (m_audioLoopPrimary.volume > 0 && m_audioLoopPrimary.isPlaying == false)
             m_audioLoopPrimary.Play();
@@ -47,7 +49,7 @@ public class MeditationAudioManager : AudioSourceManagerBase<MeditationAudioMana
         _targetSecondaryVolume *= _meditationSystem.GetMeditationProgress();
 
         float _secondaryVolumeSeekSpeed = _targetSecondaryVolume > m_audioLoopSecondary.volume ? 0.8f : 1.5f;
-        m_audioLoopSecondary.volume = Mathf.Lerp(m_audioLoopSecondary.volume, _targetSecondaryVolume, Time.deltaTime * _secondaryVolumeSeekSpeed);
+        m_audioLoopSecondary.volume = Mathf.Lerp(m_audioLoopSecondary.volume, _targetSecondaryVolume, _deltaTime * _secondaryVolumeSeekSpeed);
 
         if (m_audioLoopSecondary.volume > 0 && m_audioLoopSecondary.isPlaying == false)
             m_audioLoopSecondary.Play();

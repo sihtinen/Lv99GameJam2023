@@ -42,7 +42,7 @@ public class SwingingAxe : PuzzleBehaviour
 
     private void Update()
     {
-        m_currentSwingTime += Time.deltaTime * m_swingSpeed;
+        m_currentSwingTime += GameTime.DeltaTime(TimeChannel.Environment) * m_swingSpeed;
 
         if (m_currentSwingTime > 2f)
         {

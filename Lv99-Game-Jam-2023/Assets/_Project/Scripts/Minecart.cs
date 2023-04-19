@@ -101,8 +101,10 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
     private void updateRailPathMovement()
     {
+        float _deltaTime = GameTime.DeltaTime(TimeChannel.Environment);
+
         if (AccelerationTime < AccelerationDuration)
-            AccelerationTime += Time.deltaTime;
+            AccelerationTime += _deltaTime;
         else
             AccelerationTime = AccelerationDuration;
 
@@ -116,7 +118,7 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
         if (m_isPathReversed)
         {
-            RailPathPosition -= _speed * Time.deltaTime;
+            RailPathPosition -= _speed * _deltaTime;
 
             if (RailPathPosition <= 0f)
             {
@@ -127,7 +129,7 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         }
         else
         {
-            RailPathPosition += _speed * Time.deltaTime;
+            RailPathPosition += _speed * _deltaTime;
 
             if (RailPathPosition >= CurrentPath.PathLength)
             {
@@ -154,8 +156,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         if (m_isPathReversed)
             _targetRot *= Quaternion.Euler(0f, 180f, 0f);
 
-        Vector3 _finalPos = Vector3.Lerp(transform.position, _targetPos, Time.deltaTime * 40f);
-        Quaternion _finalRot = Quaternion.Lerp(transform.rotation, _targetRot, Time.deltaTime * 20f);
+        Vector3 _finalPos = Vector3.Lerp(transform.position, _targetPos, _deltaTime * 40f);
+        Quaternion _finalRot = Quaternion.Lerp(transform.rotation, _targetRot, _deltaTime * 20f);
 
         transform.SetPositionAndRotation(_finalPos, _finalRot);
 
@@ -165,7 +167,9 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
     private void updateNonRailroadMovement()
     {
-        bool _groundBelow = checkBelow(checkDistance: Mathf.Max(VerticalVelocity * Time.deltaTime, 0.1f));
+        float _deltaTime = GameTime.DeltaTime(TimeChannel.Environment);
+
+        bool _groundBelow = checkBelow(checkDistance: Mathf.Max(VerticalVelocity * _deltaTime, 0.1f));
 
         if (_groundBelow)
         {
@@ -174,12 +178,12 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         else
         {
             if (AccelerationTime > 0f)
-                AccelerationTime -= Time.deltaTime * AccelerationDuration;
+                AccelerationTime -= _deltaTime * AccelerationDuration;
             else
                 AccelerationTime = 0f;
 
             if (VerticalVelocity < MaxFallVelocity)
-                VerticalVelocity += Time.deltaTime * FallVelocityAcceleration;
+                VerticalVelocity += _deltaTime * FallVelocityAcceleration;
             else
                 VerticalVelocity = MaxFallVelocity;
         }
@@ -187,8 +191,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         float _accelerationCurveVal = AccelerationCurve.Evaluate(AccelerationTime / AccelerationDuration);
         float _speed = MaxSpeed * _accelerationCurveVal;
 
-        transform.position += _speed * Time.deltaTime * transform.forward;
-        transform.position -= VerticalVelocity * Time.deltaTime * Vector3.up;
+        transform.position += _speed * _deltaTime * transform.forward;
+        transform.position -= VerticalVelocity * _deltaTime * Vector3.up;
 
         if (transform.position.y < -40)
         {

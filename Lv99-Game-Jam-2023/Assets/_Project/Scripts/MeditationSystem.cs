@@ -18,6 +18,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [SerializeField] private InputActionReference m_meleeActionRef = null;
     [SerializeField] private InputActionReference m_breathActionRef = null;
     [SerializeField] private InputActionReference m_inhaleActionRef = null;
+    [SerializeField] private InputActionReference m_timestopActionRef = null;
     [Space]
     [SerializeField] private BreathMinigameCollection m_jumpMinigameCollection = null;
     [SerializeField] private BreathMinigameCollection m_meleeMinigameCollection = null;
@@ -58,6 +59,13 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             m_inhaleActionRef.action.Enable();
         }
 
+        if (m_timestopActionRef != null)
+        {
+            m_timestopActionRef.action.started += this.onTimestopInput;
+            m_timestopActionRef.action.canceled += this.onTimestopInput;
+            m_timestopActionRef.action.Enable();
+        }
+
         if (m_breathActionRef != null)
         {
             m_breathActionRef.action.started += this.onBreathInput;
@@ -86,6 +94,13 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             m_inhaleActionRef.action.started -= this.onInhaleInput;
             m_inhaleActionRef.action.canceled -= this.onInhaleInput;
             m_inhaleActionRef.action.Disable();
+        }
+
+        if (m_timestopActionRef != null)
+        {
+            m_timestopActionRef.action.started -= this.onTimestopInput;
+            m_timestopActionRef.action.canceled -= this.onTimestopInput;
+            m_timestopActionRef.action.Disable();
         }
 
         if (m_breathActionRef != null)
@@ -162,6 +177,24 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         }
     }
 
+    private void onTimestopInput(InputAction.CallbackContext context)
+    {
+        if (IsPlayerMeditating == false)
+            return;
+
+        if (ActiveMeditationPoint.IsTimestopAvailable == false)
+            return;
+
+        if (context.started)
+            startBreathMinigame(AbilityTypes.Timestop);
+
+        if (context.canceled)
+        {
+            if (IsBreathMinigameActive && CurrentBreathAbility == AbilityTypes.Timestop)
+                endBreathMinigame();
+        }
+    }
+
     private void onBreathInput(InputAction.CallbackContext context)
     {
         if (context.started == false)
@@ -216,6 +249,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
         ActiveMeditationPoint.ResetLinkedPuzzleBehaviors();
 
+        GameTimeManager.Instance?.OnResetPuzzle();
+
         startMeditation();
     }
 
@@ -245,6 +280,9 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
         if (ActiveMeditationPoint.IsInhaleAvailable)
             _meditationScreen.EnableAbilitySelection(AbilityTypes.Inhale);
+
+        if (ActiveMeditationPoint.IsTimestopAvailable)
+            _meditationScreen.EnableAbilitySelection(AbilityTypes.Timestop);
     }
 
     private void startBreathMinigame(AbilityTypes abilityType)
@@ -264,7 +302,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             case AbilityTypes.Inhale:
                 CurrentMinigameSettings = m_jumpMinigameCollection.AvailableMinigames.GetRandomElement();
                 break;
-            case AbilityTypes.Ability4:
+            case AbilityTypes.Timestop:
+                CurrentMinigameSettings = m_jumpMinigameCollection.AvailableMinigames.GetRandomElement();
                 break;
         }
 
@@ -291,7 +330,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
                 case AbilityTypes.Inhale:
                     PlayerCharacter.Instance.InhaleUses++;
                     break;
-                case AbilityTypes.Ability4:
+                case AbilityTypes.Timestop:
+                    PlayerCharacter.Instance.TimestopUses++;
                     break;
             }
 
@@ -322,7 +362,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         {
             _abilityCount += _player.JumpUses;
             _abilityCount += _player.MeleeUses;
-            _abilityCount -= _player.InhaleUses;
+            _abilityCount += _player.InhaleUses;
+            _abilityCount += _player.TimestopUses;
         }
 
         return (float)_abilityCount / (float)ActiveMeditationPoint.AbilityCount;

@@ -53,7 +53,7 @@ public class RailroadSwitch : PuzzleBehaviour, IMeleeTarget, IInhaleTarget
     private void Update()
     {
         float _targetRotation = m_currentDirection == SwitchDirection.Left ? m_maxRotateAngle : -m_maxRotateAngle;
-        m_rotatePivot.localRotation = Quaternion.Lerp(m_rotatePivot.localRotation, Quaternion.Euler(new Vector3(0f, 0f, _targetRotation)), Time.deltaTime * 5f);
+        m_rotatePivot.localRotation = Quaternion.Lerp(m_rotatePivot.localRotation, Quaternion.Euler(new Vector3(0f, 0f, _targetRotation)), GameTime.DeltaTime(TimeChannel.Player) * 5f);
     }
 
     public void OnInhaleHit(Vector3 playerPosition)

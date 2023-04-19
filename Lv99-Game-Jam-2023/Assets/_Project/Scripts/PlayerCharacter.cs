@@ -18,10 +18,12 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
     [NonSerialized] public bool AllowJump = false;
     [NonSerialized] public bool AllowMelee = false;
     [NonSerialized] public bool AllowInhale = false;
+    [NonSerialized] public bool AllowTimestop = false;
 
     [NonSerialized] public int JumpUses = 0;
     [NonSerialized] public int MeleeUses = 0;
     [NonSerialized] public int InhaleUses = 0;
+    [NonSerialized] public int TimestopUses = 0;
 
     private bool m_meditationLayersActive = false;
     private PlayerMoveComponent m_moveComponent = null;
@@ -43,11 +45,13 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
         AllowJump = JumpUses > 0;
         AllowMelee = MeleeUses > 0;
         AllowInhale = InhaleUses > 0;
+        AllowTimestop = TimestopUses > 0;
 
         if (m_moveComponent.IsGrounded == false)
         {
             AllowMelee = false;
             AllowInhale = false;
+            AllowTimestop = false;
         }
 
         if (m_inhaleComponent.IsInhaling)
@@ -55,6 +59,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             AllowMovement = false;
             AllowJump = false;
             AllowMelee = false;
+            AllowTimestop = false;
         }
 
         if (m_meleeComponent.IsMeleeAttacking)
@@ -62,6 +67,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             AllowMovement = false;
             AllowJump = false;
             AllowMelee = false;
+            AllowTimestop = false;
         }
 
         var _meditationSystem = MeditationSystem.Instance;
@@ -71,6 +77,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             AllowJump = false;
             AllowMelee = false;
             AllowInhale = false;
+            AllowTimestop = false;
 
             if (m_meditationLayersActive == false)
                 enableMeditationCameraLayer();
@@ -87,6 +94,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
                 AllowJump = false;
                 AllowMelee = false;
                 AllowInhale = false;
+                AllowTimestop = false;
             }
 
             if (m_meditationLayersActive && _playerCamera != null && _playerCamera.IsAnimating() == false)
@@ -107,7 +115,8 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             case AbilityTypes.Inhale:
                 InhaleUses--;
                 break;
-            case AbilityTypes.Ability4:
+            case AbilityTypes.Timestop:
+                TimestopUses--;
                 break;
         }
 
@@ -140,7 +149,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
 
     public bool HasAnyUsesLeft()
     {
-        return JumpUses > 0 || MeleeUses > 0;
+        return JumpUses > 0 || MeleeUses > 0 || InhaleUses > 0 || TimestopUses > 0;
     }
 
     public void TakeDamage()

@@ -69,7 +69,7 @@ public class PlayerSquashStretch : MonoBehaviour
         while (_timer < m_landingSquashDuration)
         {
             yield return null;
-            _timer += Time.deltaTime;
+            _timer += GameTime.DeltaTime(TimeChannel.Player);
 
             float _animTime = _timer / m_landingSquashDuration;
             float _curveVal = m_landingSquashCurve.Evaluate(_animTime);

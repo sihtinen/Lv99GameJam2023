@@ -9,6 +9,7 @@ public abstract class AudioPlayer : MonoBehaviour
     [Header("Audio Settings")]
     [SerializeField, Range(0f, 1f)] protected float m_volume = 1.0f;
     [SerializeField] protected AudioChannelLevelManager.AudioChannel m_channel = AudioChannelLevelManager.AudioChannel.None;
+    [SerializeField] protected TimeChannel m_timeChannel = TimeChannel.Environment;
 
     [Header("Object References")]
     [SerializeField] protected AudioSource m_audioSource = null;
@@ -26,7 +27,7 @@ public abstract class AudioPlayer : MonoBehaviour
     {
         if (IsDelayed)
         {
-            DelayTimeRemaining -= Time.deltaTime;
+            DelayTimeRemaining -= GameTime.DeltaTime(m_timeChannel);
 
             if (DelayTimeRemaining <= 0f)
             {

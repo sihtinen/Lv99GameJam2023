@@ -75,7 +75,7 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
             return;
         }
 
-        InhaleTime += Time.deltaTime;
+        InhaleTime += GameTime.DeltaTime(TimeChannel.Player);
 
         if (InhaleTime < m_collisionStartTime)
             return;

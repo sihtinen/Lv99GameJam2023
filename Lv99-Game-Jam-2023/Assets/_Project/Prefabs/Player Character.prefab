@@ -261,6 +261,7 @@ GameObject:
   - component: {fileID: 4753841781666251978}
   - component: {fileID: 2571137019837608928}
   - component: {fileID: 3469866961817687448}
+  - component: {fileID: 6188936570552117900}
   m_Layer: 0
   m_Name: Player Character
   m_TagString: Untagged
@@ -334,6 +335,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_isPersistentObject: 0
   m_renderMeshRootObj: {fileID: 1270129172457647652}
+  OnTakeDamage:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &4753841781666251980
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -395,6 +399,12 @@ MonoBehaviour:
   m_meleeActionRef: {fileID: 6799444315234072050, guid: d41352ead7d06444ca3bbcfb7400ba6f,
     type: 3}
   m_meleeHitImpulseSource: {fileID: 7438276804680625840}
+  OnMeleeSwingBegin:
+    m_PersistentCalls:
+      m_Calls: []
+  OnMeleeSwingHit:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2571137019837608928
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -424,6 +434,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 017da3a86f051c04aae3bb7f3f29e83a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6188936570552117900
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4753841781666252018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 585c52d6eae5ab144ba799fbe4121edc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_isPersistentObject: 0
+  m_timeStopDuration: 4
+  m_timeStopTimeScale: 0.02
+  m_timeStopInputRef: {fileID: -3357596317974830730, guid: d41352ead7d06444ca3bbcfb7400ba6f,
+    type: 3}
 --- !u!1 &4753841781982492301
 GameObject:
   m_ObjectHideFlags: 0
