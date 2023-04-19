@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/_Project/Scenes/MainMenu.unity
+    guid: 4e99062c9a09f8146ad91c8816eef58c
+  - enabled: 1
     path: Assets/_Project/Scenes/Game_Level_01-Melee_01.unity
     guid: ea96d34e0307bd1438f6abc5bd0b5da2
   - enabled: 1

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SceneLoader : SingletonBehaviour<SceneLoader>
 {
@@ -45,16 +46,19 @@ public class SceneLoader : SingletonBehaviour<SceneLoader>
         _transitionScreen.AllowTransition = false;
         _transitionScreen.OnScreenObscured -= this.onScreenObscured_ReloadScene;
 
-        string _currentScenePath = UnityEngine.SceneManagement.SceneManager.GetActiveScene().path;
+        string _currentScenePath = SceneManager.GetActiveScene().path;
         m_activeCoroutine = StartCoroutine(coroutine_loadScene(_currentScenePath));
     }
 
     private IEnumerator coroutine_loadScene(string scenePath)
     {
-        var _loadOp = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(scenePath, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        var _loadOp = SceneManager.LoadSceneAsync(scenePath, LoadSceneMode.Single);
 
         while (_loadOp.isDone == false)
             yield return null;
+
+        var _loadedScene = SceneManager.GetSceneByPath(scenePath);
+        SceneManager.SetActiveScene(_loadedScene);
 
         var _transitionScreen = TransitionScreen.Instance;
         _transitionScreen.AllowTransition = true;
