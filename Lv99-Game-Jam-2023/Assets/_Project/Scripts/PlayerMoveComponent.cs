@@ -1,4 +1,3 @@
-using Cinemachine;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
+
+using Cinemachine;
 
 public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 {
@@ -129,31 +130,33 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         if (m_playerCharacter.AllowMovement == false)
             _moveInput = Vector2.zero;
 
+        float _deltaTime = GameTime.DeltaTime(TimeChannel.Player);
+
         float _targetAcceleration = m_characterController.isGrounded ? m_moveAcceleration_Ground : m_moveAcceleration_Air;
         float _targetDeceleration = m_characterController.isGrounded ? m_moveDeceleration_Ground : m_moveDeceleration_Air;
         float _finalAcceleration = _moveInput.magnitude > m_moveInputThreshold ? _targetAcceleration : _targetDeceleration;
 
         var _targetVelocity = m_moveSpeed * (_moveInput.x * _mainCameraRight + _moveInput.y * _mainCameraForward);
 
-        m_currentHorizontalVelocity = Vector3.MoveTowards(m_currentHorizontalVelocity, _targetVelocity, Time.deltaTime * _finalAcceleration);
+        m_currentHorizontalVelocity = Vector3.MoveTowards(m_currentHorizontalVelocity, _targetVelocity, _deltaTime * _finalAcceleration);
 
         bool _isJumping = Time.time - m_jumpStartTime < m_jumpCooldownTime;
 
         if (_isJumping == false && (m_wasGroundedPreviousFrame && m_characterController.isGrounded == false))
             CurrentVerticalVelocity = 0f;
         else
-            CurrentVerticalVelocity = Mathf.MoveTowards(CurrentVerticalVelocity, -m_maxFallVelocity, Time.deltaTime * m_fallAcceleration);
+            CurrentVerticalVelocity = Mathf.MoveTowards(CurrentVerticalVelocity, -m_maxFallVelocity, _deltaTime * m_fallAcceleration);
 
         Vector3 _moveVelocity = m_currentHorizontalVelocity + new Vector3(0f, CurrentVerticalVelocity, 0f);
 
         if (m_characterController.isGrounded && m_standingOnMinecart != null)
         {
             var _minecartVelocity = m_standingOnMinecart.GetVelocity();
-            _moveVelocity += _minecartVelocity;
+            _moveVelocity += GameTimeManager.Instance.EnvironmentTimeScale * _minecartVelocity;
         }
 
         m_wasGroundedPreviousFrame = m_characterController.isGrounded;
-        m_characterController.Move(Time.deltaTime * _moveVelocity);
+        m_characterController.Move(_deltaTime * _moveVelocity);
 
         if (m_characterController.isGrounded == false)
         {
@@ -169,7 +172,7 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         var _velocity = m_characterController.velocity;
 
         if (m_characterController.isGrounded && m_standingOnMinecart != null)
-            _velocity -= m_standingOnMinecart.GetVelocity();
+            _velocity -= GameTimeManager.Instance.EnvironmentTimeScale * m_standingOnMinecart.GetVelocity();
 
         _velocity.y = 0f;
 
@@ -224,17 +227,19 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
             if (m_standingOnMinecart != null)
                 _vel -= m_standingOnMinecart.GetVelocity();
 
-            return _vel.sqrMagnitude > 0.2f;
+            return _vel.sqrMagnitude > 0.7f;
         }
     }
 
     public void MoveTowards(Transform moveTarget)
     {
-        Vector3 _newTargetPos = Vector3.Lerp(transform.position, moveTarget.position, Time.deltaTime * 5f);
+        float _deltaTime = GameTime.DeltaTime(TimeChannel.Player);
+
+        Vector3 _newTargetPos = Vector3.Lerp(transform.position, moveTarget.position, _deltaTime * 5f);
 
         m_characterController.Move(_newTargetPos - transform.position);
 
-        transform.rotation = Quaternion.Lerp(transform.rotation, moveTarget.rotation, Time.deltaTime * 20f);
+        transform.rotation = Quaternion.Lerp(transform.rotation, moveTarget.rotation, _deltaTime * 20f);
     }
 
     public void SetPositionAndRotation(Transform target)

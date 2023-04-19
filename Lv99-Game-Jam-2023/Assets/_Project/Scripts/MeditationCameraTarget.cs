@@ -42,9 +42,11 @@ public class MeditationCameraTarget : MonoBehaviour
         if (m_meditationPoint.IsActive == false)
             return;
 
+        float _deltaTime = GameTime.DeltaTime(TimeChannel.Player);
+
         var _input = m_moveInputRef.action.ReadValue<Vector2>();
-        m_offset.x += _input.x * Time.deltaTime * m_moveSpeed;
-        m_offset.y += _input.y * Time.deltaTime * m_moveSpeed;
+        m_offset.x += _input.x * _deltaTime * m_moveSpeed;
+        m_offset.y += _input.y * _deltaTime * m_moveSpeed;
 
         m_offset.x = Mathf.Clamp(m_offset.x, m_horizontalMoveLimits.x, m_horizontalMoveLimits.y);
         m_offset.y = Mathf.Clamp(m_offset.y, m_depthMoveLimits.x, m_depthMoveLimits.y);

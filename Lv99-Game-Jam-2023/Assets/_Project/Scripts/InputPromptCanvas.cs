@@ -49,7 +49,7 @@ public class InputPromptCanvas : MonoBehaviour
         float _targetFontSize = _isMeditatePromptActive ? m_maxMeditateFontSize : 0f;
         float _speed = _isMeditatePromptActive ? m_meditatePromptAppearSpeed : m_meditatePromptDisappearSpeed;
 
-        m_meditatePromptText.fontSize = Mathf.Lerp(m_meditatePromptText.fontSize, _targetFontSize, Time.deltaTime * _speed);
+        m_meditatePromptText.fontSize = Mathf.Lerp(m_meditatePromptText.fontSize, _targetFontSize, GameTime.DeltaTime(TimeChannel.Player) * _speed);
     }
 
     private void updateRetryPrompt()
@@ -59,7 +59,7 @@ public class InputPromptCanvas : MonoBehaviour
         float _targetFontSize = _isRetryPromptActive ? m_maxRetryFontSize : 0f;
         float _speed = _isRetryPromptActive ? m_retryPromptAppearSpeed : m_retryPromptDisappearSpeed;
 
-        m_retryPromptText.fontSize = Mathf.Lerp(m_retryPromptText.fontSize, _targetFontSize, Time.deltaTime * _speed);
+        m_retryPromptText.fontSize = Mathf.Lerp(m_retryPromptText.fontSize, _targetFontSize, GameTime.DeltaTime(TimeChannel.Player) * _speed);
     }
 
     private static bool isMeditatePromptActive()

@@ -30,6 +30,6 @@ public class InhaleCameraNoise : SingletonBehaviour<InhaleCameraNoise>
         if (_inhaleComponent != null && _inhaleComponent.IsInhaling)
             _targetGain = m_maxGain;
 
-        m_noise.m_AmplitudeGain = Mathf.MoveTowards(m_noise.m_AmplitudeGain, _targetGain, Time.deltaTime);
+        m_noise.m_AmplitudeGain = Mathf.MoveTowards(m_noise.m_AmplitudeGain, _targetGain, GameTime.DeltaTime(TimeChannel.Player));
     }
 }

@@ -55,6 +55,8 @@ MonoBehaviour:
     type: 3}
   m_inhaleActionRef: {fileID: 6914676432405854548, guid: d41352ead7d06444ca3bbcfb7400ba6f,
     type: 3}
+  m_timestopActionRef: {fileID: -3357596317974830730, guid: d41352ead7d06444ca3bbcfb7400ba6f,
+    type: 3}
   m_jumpMinigameCollection: {fileID: 11400000, guid: afec355eae3987848a420e8124701bb7,
     type: 2}
   m_meleeMinigameCollection: {fileID: 11400000, guid: 762f1e7f8d31839459aa61b696f9cd72,

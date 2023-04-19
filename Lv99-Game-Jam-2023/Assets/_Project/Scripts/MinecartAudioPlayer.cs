@@ -24,7 +24,7 @@ public class MinecartAudioPlayer : AudioPlayer
         float _targetVolume = m_minecart.IsOnRailroad && m_minecart.IsMoving ? 1.0f : 0.0f;
         _targetVolume *= (m_minecart.AccelerationTime / m_minecart.AccelerationDuration);
 
-        m_volume = Mathf.Lerp(m_volume, _targetVolume, Time.deltaTime * 3f);
+        m_volume = Mathf.Lerp(m_volume, _targetVolume, GameTime.DeltaTime(TimeChannel.Environment) * 3f);
 
         if (m_audioSource.isPlaying == false)
             m_audioSource.Play();

@@ -77,7 +77,7 @@ public class PlayerAnimationHandler : MonoBehaviour
             _targetRotation = Quaternion.Euler(_localInputVector.z * m_inputLean_Forward, 0f, -_localInputVector.x * m_inputLean_Sideways);
         }
 
-        m_inputRotation = Quaternion.Lerp(m_inputRotation, _targetRotation, Time.deltaTime * m_inputLean_Sharpness);
+        m_inputRotation = Quaternion.Lerp(m_inputRotation, _targetRotation, GameTime.DeltaTime(TimeChannel.Player) * m_inputLean_Sharpness);
 
         transform.rotation = transform.rotation * m_inputRotation;
     }

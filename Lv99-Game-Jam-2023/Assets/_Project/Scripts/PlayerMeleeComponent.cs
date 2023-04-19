@@ -88,7 +88,7 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
         while (_timer < m_meleeDuration)
         {
             yield return null;
-            _timer += Time.deltaTime;
+            _timer += GameTime.DeltaTime(TimeChannel.Player);
 
             MeleeTime = _timer / m_meleeDuration;
 
