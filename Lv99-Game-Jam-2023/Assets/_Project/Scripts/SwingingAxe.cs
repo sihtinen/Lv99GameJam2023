@@ -11,6 +11,9 @@ public class SwingingAxe : PuzzleBehaviour
     [SerializeField] private float m_maxRotationAngle = 70f;
     [SerializeField] private AnimationCurve m_swingCurve = new();
     [SerializeField, Range(0f, 2f)] private float m_initialSwingTime = 0f;
+    [Space]
+    [SerializeField, Range(0f, 1f)] private float m_audioPlayTime_Up = 0.3f;
+    [SerializeField, Range(0f, 1f)] private float m_audioPlayTime_Down = 0.3f;
 
     [Header("Hit Stop Settings")]
     [SerializeField] private float m_hitStopTimeScale = 0.1f;
@@ -19,7 +22,10 @@ public class SwingingAxe : PuzzleBehaviour
     [Header("Object References")]
     [SerializeField] private Transform m_rotatePivot = null;
     [SerializeField] private CinemachineImpulseSource m_impulseSource = null;
+    [SerializeField] private SwingingAxeAudioPlayer m_audioPlayer = null;
 
+    private bool m_audioPlayedUp = false;
+    private bool m_audioPlayedDown = false;
     private float m_currentSwingTime = 0f;
 
     private void Start()
@@ -39,7 +45,11 @@ public class SwingingAxe : PuzzleBehaviour
         m_currentSwingTime += Time.deltaTime * m_swingSpeed;
 
         if (m_currentSwingTime > 2f)
+        {
             m_currentSwingTime -= 2f;
+            m_audioPlayedUp = false;
+            m_audioPlayedDown = false;
+        }
 
         updateRotation();
     }
@@ -53,6 +63,23 @@ public class SwingingAxe : PuzzleBehaviour
         float _angle = Mathf.Lerp(-m_maxRotationAngle, m_maxRotationAngle, _curveVal);
 
         m_rotatePivot.localEulerAngles = new Vector3(0f, 0f, _angle);
+
+        if (m_currentSwingTime < 1.0f)
+        {
+            if (m_audioPlayedUp == false && _curveVal >= m_audioPlayTime_Up)
+            {
+                m_audioPlayedUp = true;
+                m_audioPlayer.SelectClipAndPlay();
+            }
+        }
+        else
+        {
+            if (m_audioPlayedDown == false && (1.0f - _curveVal) >= m_audioPlayTime_Down)
+            {
+                m_audioPlayedDown = true;
+                m_audioPlayer.SelectClipAndPlay();
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
