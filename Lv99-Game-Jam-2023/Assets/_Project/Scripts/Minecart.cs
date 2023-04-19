@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using Cinemachine;
+using UnityEngine.Events;
+using System.Runtime.Remoting.Messaging;
 
 [DefaultExecutionOrder(-1)]
 public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
@@ -22,6 +24,9 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
     [Header("Object References")]
     [SerializeField] private CinemachineImpulseSource m_collisionImpulseSource = null;
 
+    [Header("Unity Events")]
+    public UnityEvent OnResetPuzzleState = new();
+
     [NonSerialized] public bool IsOnRailroad = false;
     [NonSerialized] public bool IsMoving = false;
     [NonSerialized] public float RailPathPosition;
@@ -31,7 +36,7 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
     [NonSerialized] public CinemachineSmoothPath CurrentPath = null;
     [NonSerialized] public MinecartSpawner SourceSpawner = null;
     [NonSerialized] IMinecartObstacle CurrentObstacle = null;
-     
+
     private bool m_isPathReversed = false;
     private BoxCollider m_boxCollider = null;
     private List<Railroad> m_collidedRailroads = new List<Railroad>();
@@ -65,6 +70,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         }
 
         gameObject.SetActiveOptimized(true);
+
+        OnResetPuzzleState?.Invoke();
     }
 
     private void prepareRailroadPath()

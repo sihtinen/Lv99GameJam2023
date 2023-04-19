@@ -29,6 +29,19 @@ public class AudioChannelLevelManager : SingletonBehaviour<AudioChannelLevelMana
         }
     }
 
+    private void LateUpdate()
+    {
+        float _globalMaxVolume = 1.0f;
+
+        var _transitionScreen = TransitionScreen.Instance;
+        if (_transitionScreen != null && _transitionScreen.IsTransitionActive)
+            _globalMaxVolume = 1.0f - _transitionScreen.TransitionFillAmount;
+
+        EnvironmentVolume = _globalMaxVolume;
+        AmbientVolume = _globalMaxVolume;
+        MeditationVolume = _globalMaxVolume;
+    }
+
     public enum AudioChannel
     {
         None = 0,

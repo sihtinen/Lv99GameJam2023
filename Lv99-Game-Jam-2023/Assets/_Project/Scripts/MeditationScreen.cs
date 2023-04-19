@@ -149,7 +149,7 @@ public class MeditationScreen : SingletonBehaviour<MeditationScreen>
         m_centeredAbilityMoveTime = 0f;
     }
 
-    public void OnBreathEnded(bool success)
+    public void OnMinigameEnded(bool success)
     {
         if (m_centeredAbilityElement != null)
         {

@@ -275,7 +275,10 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     {
         IsBreathMinigameActive = false;
 
-        if (IsMinigameSuccessWindowActive || (Application.isEditor && m_debugSkipMinigames))
+        if (Application.isEditor && m_debugSkipMinigames)
+            IsMinigameSuccessWindowActive = true;
+
+        if (IsMinigameSuccessWindowActive)
         {
             switch (CurrentBreathAbility)
             {
@@ -297,11 +300,31 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             AbilityCanvas.Instance?.AddAbilityElement(CurrentBreathAbility);
         }
 
-        MeditationScreen.Instance?.OnBreathEnded(IsMinigameSuccessWindowActive);
+        MeditationScreen.Instance?.OnMinigameEnded(IsMinigameSuccessWindowActive);
+
+        MeditationAudioManager.Instance?.OnMinigameEnded(IsMinigameSuccessWindowActive);
 
         if (m_abilitiesSelected >= ActiveMeditationPoint.AbilityCount)
             exitMeditation();
 
         CurrentMinigameSettings = null;
+    }
+
+    public float GetMeditationProgress()
+    {
+        if (ActiveMeditationPoint == null)
+            return 0f;
+
+        int _abilityCount = 0;
+
+        var _player = PlayerCharacter.Instance;
+        if (_player != null)
+        {
+            _abilityCount += _player.JumpUses;
+            _abilityCount += _player.MeleeUses;
+            _abilityCount -= _player.InhaleUses;
+        }
+
+        return (float)_abilityCount / (float)ActiveMeditationPoint.AbilityCount;
     }
 }
