@@ -357,7 +357,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 9181daa39dc3f3644b3435d57d8c705d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -404,6 +404,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f787f874163b8b44d8e006f2ca391330, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  IsJumpAvailable: 0
+  IsMeleeAvailable: 0
+  IsInhaleAvailable: 0
+  AbilityCount: 3
+  m_linkedPuzzleBehaviors: []
   m_cameraTargetIn: {fileID: 2585621459044460344}
   m_cameraTargetOut: {fileID: 2585621459321616000}
   m_playerMoveTarget: {fileID: 2585621460639995383}
