@@ -5,17 +5,15 @@ using UnityEngine;
 
 using Cinemachine;
 
-public class InhaleCameraNoise : SingletonBehaviour<InhaleCameraNoise>
+public class InhaleCameraNoise : MonoBehaviour
 {
     [SerializeField] private float m_maxGain = 1.0f;
 
     private CinemachineVirtualCamera m_vcam = null;
     private CinemachineBasicMultiChannelPerlin m_noise = null;
 
-    protected override void Awake()
+    private void Awake()
     {
-        base.Awake();
-
         TryGetComponent(out m_vcam);
         m_noise = m_vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
         m_noise.m_AmplitudeGain = 0f;

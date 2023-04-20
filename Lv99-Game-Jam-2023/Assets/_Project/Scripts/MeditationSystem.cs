@@ -204,8 +204,10 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (_player == null)
             return;
 
-        if (ActiveMeditationPoint != null)
+        if (ActiveMeditationPoint != null && OverlappingMeditationPoint == null)
+        {
             ResetCurrentPuzzle();
+        }
         else
         {
             if (OverlappingMeditationPoint == null)

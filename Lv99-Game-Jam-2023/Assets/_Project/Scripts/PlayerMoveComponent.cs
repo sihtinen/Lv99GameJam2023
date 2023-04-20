@@ -182,7 +182,14 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         if (m_previousRotationInput == Vector2.zero)
             return;
 
-        Vector3 _newForward = new Vector3(m_previousRotationInput.x, 0f, m_previousRotationInput.y).normalized;
+        var _mainCamera = MainCameraComponent.Instance;
+
+        if (_mainCamera == null)
+            return;
+
+        Vector3 _newForward = (
+            m_previousRotationInput.x * _mainCamera.HorizontalRightDirection + 
+            m_previousRotationInput.y * _mainCamera.HorizontalForwardDirection).normalized;
 
         var _targetRotation = Quaternion.LookRotation(_newForward, Vector3.up);
 
