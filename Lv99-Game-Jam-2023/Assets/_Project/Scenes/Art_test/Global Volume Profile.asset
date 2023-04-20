@@ -27,7 +27,45 @@ MonoBehaviour:
     m_Value: 0
   saturation:
     m_OverrideState: 1
-    m_Value: 10
+    m_Value: 5
+--- !u!114 &-6172523618195002095
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
+  m_Name: Tonemapping
+  m_EditorClassIdentifier: 
+  active: 1
+  mode:
+    m_OverrideState: 1
+    m_Value: 2
+--- !u!114 &-5604994205733070310
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5485954d14dfb9a4c8ead8edb0ded5b1, type: 3}
+  m_Name: LiftGammaGain
+  m_EditorClassIdentifier: 
+  active: 1
+  lift:
+    m_OverrideState: 0
+    m_Value: {x: 0.9912483, y: 0.9759895, z: 1, w: -2.9126304e-10}
+  gamma:
+    m_OverrideState: 1
+    m_Value: {x: 0.9794493, y: 1, z: 0.97199917, w: -0.06177606}
+  gain:
+    m_OverrideState: 0
+    m_Value: {x: 1, y: 1, z: 1, w: -0.12355212}
 --- !u!114 &-2624619697360812614
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -46,10 +84,10 @@ MonoBehaviour:
     m_Value: {x: 0.83999825, y: 0.9399443, z: 1, w: 0}
   midtones:
     m_OverrideState: 1
-    m_Value: {x: 0.98938966, y: 1, z: 0.9223466, w: -2.91897e-10}
+    m_Value: {x: 0.98938966, y: 1, z: 0.9223466, w: -0.015444016}
   highlights:
     m_OverrideState: 1
-    m_Value: {x: 0.96742034, y: 1, z: 0.893243, w: 0}
+    m_Value: {x: 1, y: 0.97590315, z: 0.9273246, w: 0.12355212}
   shadowsStart:
     m_OverrideState: 0
     m_Value: 0
@@ -80,7 +118,7 @@ MonoBehaviour:
     m_Value: 1
   intensity:
     m_OverrideState: 1
-    m_Value: 0.25
+    m_Value: 0.3
   scatter:
     m_OverrideState: 0
     m_Value: 0.7
@@ -116,10 +154,12 @@ MonoBehaviour:
   m_Name: Global Volume Profile
   m_EditorClassIdentifier: 
   components:
+  - {fileID: -6172523618195002095}
   - {fileID: -1661131865377031185}
   - {fileID: -8466424741836760111}
   - {fileID: 5040779634375597890}
   - {fileID: -2624619697360812614}
+  - {fileID: -5604994205733070310}
 --- !u!114 &5040779634375597890
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -141,10 +181,10 @@ MonoBehaviour:
     m_Value: {x: 0.5, y: 0.5}
   intensity:
     m_OverrideState: 1
-    m_Value: 0.5
+    m_Value: 0.509
   smoothness:
     m_OverrideState: 1
-    m_Value: 0.7
+    m_Value: 0.732
   rounded:
     m_OverrideState: 0
     m_Value: 1
