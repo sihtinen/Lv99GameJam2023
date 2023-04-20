@@ -1445,6 +1445,10 @@ MonoBehaviour:
     scenePath: Assets/_Project/Scenes/Game_Level_06-Inhale_01.unity
   - sceneAsset: {fileID: 102900000, guid: 17792611c0e9ec749a3ff094275bfde5, type: 3}
     scenePath: Assets/_Project/Scenes/Game_Level_07-Inhale_02.unity
+  - sceneAsset: {fileID: 102900000, guid: bafd1f13640271c4598d3b6e2e3ceb3e, type: 3}
+    scenePath: Assets/_Project/Scenes/Game_Level_08-Timestop_01.unity
+  - sceneAsset: {fileID: 102900000, guid: 7d6455abeca015a4e93576581105dc92, type: 3}
+    scenePath: Assets/_Project/Scenes/Game_Level_09-Timestop_02.unity
   m_mainMenuCanvas: {fileID: 1636138532}
   m_levelSelectCanvas: {fileID: 66354914}
   m_levelSelectVerticalGroup: {fileID: 1384017191}

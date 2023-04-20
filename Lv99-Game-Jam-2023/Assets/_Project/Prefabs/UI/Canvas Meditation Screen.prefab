@@ -35,7 +35,7 @@ RectTransform:
   m_Father: {fileID: 6054986308711059989}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.7, y: 0}
+  m_AnchorMin: {x: 0.78, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -50, y: 160}
   m_SizeDelta: {x: -50, y: -320}
@@ -150,8 +150,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -33.29}
-  m_SizeDelta: {x: 0, y: 50}
+  m_AnchoredPosition: {x: -200, y: -33.29}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &6054986308931664745
 CanvasRenderer:
@@ -181,7 +181,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Breathing techniques
+  m_text: '<b>Available breathing techniques</b>
+
+    Press and hold button to prepare
+    one use of selected ability'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -208,13 +211,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 24
+  m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 1
+  m_fontStyle: 0
   m_HorizontalAlignment: 4
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -315,7 +318,7 @@ MonoBehaviour:
     m_Top: 0
     m_Bottom: 0
   m_ChildAlignment: 0
-  m_Spacing: 40
+  m_Spacing: 20
   m_ChildForceExpandWidth: 1
   m_ChildForceExpandHeight: 0
   m_ChildControlWidth: 1
@@ -591,7 +594,7 @@ MonoBehaviour:
   m_abilitySelectionHidePosition: {x: 0, y: 0.8}
   m_abilitySelectionPanelAppearTime: 0.3
   m_abilitySelectionPanelHideTime: 0.2
-  m_breathAbilityCenterOffset: {x: 0, y: 340}
+  m_breathAbilityCenterOffset: {x: 0, y: 380}
   m_breathAbilityMoveToCenterTime: 0.5
   m_breathAbilityMoveToCenterCurve:
     serializedVersion: 2

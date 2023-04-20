@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: decal 2
+  m_Name: decal_suction_hieroglyph
   m_Shader: {fileID: -6465566751694194690, guid: f1524297e443fcb4f95d366a4698b144,
     type: 3}
   m_ValidKeywords: []
