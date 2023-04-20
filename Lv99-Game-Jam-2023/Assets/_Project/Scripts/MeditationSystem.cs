@@ -150,11 +150,11 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             return;
 
         if (context.started)
-            startBreathMinigame(AbilityTypes.Melee);
+            startBreathMinigame(AbilityTypes.Pickaxe);
 
         if (context.canceled)
         {
-            if (IsBreathMinigameActive && CurrentBreathAbility == AbilityTypes.Melee)
+            if (IsBreathMinigameActive && CurrentBreathAbility == AbilityTypes.Pickaxe)
                 endBreathMinigame();
         }
     }
@@ -272,11 +272,11 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         var _meditationScreen = MeditationScreen.Instance;
         _meditationScreen.Clear();
 
+        if (ActiveMeditationPoint.IsMeleeAvailable)
+            _meditationScreen.EnableAbilitySelection(AbilityTypes.Pickaxe);
+
         if (ActiveMeditationPoint.IsJumpAvailable)
             _meditationScreen.EnableAbilitySelection(AbilityTypes.Jump);
-
-        if (ActiveMeditationPoint.IsMeleeAvailable)
-            _meditationScreen.EnableAbilitySelection(AbilityTypes.Melee);
 
         if (ActiveMeditationPoint.IsInhaleAvailable)
             _meditationScreen.EnableAbilitySelection(AbilityTypes.Inhale);
@@ -296,7 +296,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
             case AbilityTypes.Jump:
                 CurrentMinigameSettings = m_jumpMinigameCollection.AvailableMinigames.GetRandomElement();
                 break;
-            case AbilityTypes.Melee:
+            case AbilityTypes.Pickaxe:
                 CurrentMinigameSettings = m_meleeMinigameCollection.AvailableMinigames.GetRandomElement();
                 break;
             case AbilityTypes.Inhale:
@@ -324,7 +324,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
                 case AbilityTypes.Jump:
                     PlayerCharacter.Instance.JumpUses++;
                     break;
-                case AbilityTypes.Melee:
+                case AbilityTypes.Pickaxe:
                     PlayerCharacter.Instance.MeleeUses++;
                     break;
                 case AbilityTypes.Inhale:

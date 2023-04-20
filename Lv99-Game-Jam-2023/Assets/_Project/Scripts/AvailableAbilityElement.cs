@@ -43,7 +43,7 @@ public class AvailableAbilityElement : MonoBehaviour
                 m_iconImage.overrideSprite = m_jumpIconSprite;
                 m_inputText.SetText("Space");
                 break;
-            case AbilityTypes.Melee:
+            case AbilityTypes.Pickaxe:
                 m_iconImage.overrideSprite = m_meleeIconSprite;
                 m_inputText.SetText("X");
                 break;

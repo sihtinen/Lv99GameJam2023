@@ -361,6 +361,7 @@ MonoBehaviour:
   m_maxFallVelocity: 16
   m_jumpVelocity: 12
   m_jumpCooldownTime: 0.3
+  m_rotateSpeed: 12
   m_moveActionRef: {fileID: 996773148634057902, guid: d41352ead7d06444ca3bbcfb7400ba6f,
     type: 3}
   m_jumpActionRef: {fileID: -5520167389686494168, guid: d41352ead7d06444ca3bbcfb7400ba6f,

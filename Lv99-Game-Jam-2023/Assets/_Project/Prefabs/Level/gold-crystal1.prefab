@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7649493274740145446}
   - component: {fileID: 6739546749224825475}
   - component: {fileID: 8818990654194435657}
-  - component: {fileID: 880116286467542382}
+  - component: {fileID: 891452990027330109}
   m_Layer: 0
   m_Name: gold-crystal1
   m_TagString: Untagged
@@ -84,8 +84,8 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &880116286467542382
-BoxCollider:
+--- !u!64 &891452990027330109
+MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -94,6 +94,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.6342016, y: 1.4359707, z: 0.86894405}
-  m_Center: {x: 0.105653316, y: 0.7076835, z: -0.006148562}
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3283701840290553535, guid: 141dd5678c157134197be0e0cc148ed7, type: 3}

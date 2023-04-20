@@ -39,7 +39,7 @@ public class MeditationAbilitySelectionUIElement : MonoBehaviour
                 m_iconImage.overrideSprite = m_jumpIconSprite;
                 m_inputText.SetText("Press \"<b>Space</b>\"");
                 break;
-            case AbilityTypes.Melee:
+            case AbilityTypes.Pickaxe:
                 m_iconImage.overrideSprite = m_meleeIconSprite;
                 m_inputText.SetText("Press \"<b>X</b>\"");
                 break;

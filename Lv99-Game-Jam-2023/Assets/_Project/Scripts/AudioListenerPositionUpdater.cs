@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [DefaultExecutionOrder(100)]
-public class AudioListenerPositionUpdater : MonoBehaviour
+public class AudioListenerPositionUpdater : SingletonBehaviour<AudioListenerPositionUpdater>
 {
     [SerializeField] private float m_normalizedDistanceToPlayer = 0.7f;
 

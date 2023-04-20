@@ -70,7 +70,7 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
 
         if (context.started)
         {
-            m_playerCharacter.UseAbility(AbilityTypes.Melee);
+            m_playerCharacter.UseAbility(AbilityTypes.Pickaxe);
             m_meleeCoroutine = StartCoroutine(coroutine_meleeAttack());
         }
     }

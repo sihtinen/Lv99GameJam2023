@@ -15,6 +15,11 @@ public class MeditationPoint : MonoBehaviour
     public bool IsTimestopAvailable = false;
     [Min(1)] public int AbilityCount = 3;
 
+    [Header("Camera Settings")]
+    public int CameraFOV = 40;
+    public float CameraDistance = 40;
+    public Vector3 CameraEuler = new Vector3(60, 0, 0);
+
     [Header("Object References")]
     [SerializeField] private List<PuzzleBehaviour> m_linkedPuzzleBehaviors = new();
     [Space]
@@ -30,8 +35,11 @@ public class MeditationPoint : MonoBehaviour
 
     public event Action OnBecameActive = null;
 
+    private CinemachineFramingTransposer m_framingTransposer = null;
+
     private void Awake()
     {
+        m_framingTransposer = m_virtualCam.GetCinemachineComponent<CinemachineFramingTransposer>();
         m_virtualCam.enabled = false;
     }
 
@@ -57,6 +65,16 @@ public class MeditationPoint : MonoBehaviour
         {
             if (_meditationSystem.OverlappingMeditationPoint == this)
                 _meditationSystem.OverlappingMeditationPoint = null;
+        }
+    }
+
+    private void Update()
+    {
+        if (m_virtualCam.enabled)
+        {
+            m_virtualCam.transform.localEulerAngles = CameraEuler;
+            m_virtualCam.m_Lens.FieldOfView = CameraFOV;
+            m_framingTransposer.m_CameraDistance = CameraDistance;
         }
     }
 

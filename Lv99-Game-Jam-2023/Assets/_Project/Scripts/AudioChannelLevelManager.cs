@@ -37,9 +37,20 @@ public class AudioChannelLevelManager : SingletonBehaviour<AudioChannelLevelMana
         if (_transitionScreen != null && _transitionScreen.IsTransitionActive)
             _globalMaxVolume = 1.0f - _transitionScreen.TransitionFillAmount;
 
-        EnvironmentVolume = _globalMaxVolume;
-        AmbientVolume = _globalMaxVolume;
-        MeditationVolume = _globalMaxVolume;
+        float _targetEnvironmentVolume = 1.0f * _globalMaxVolume;
+        float _targetAmbientVolume = 1.0f * _globalMaxVolume;
+        float _targetMeditationVolume = _globalMaxVolume;
+
+        var _meditationSystem = MeditationSystem.Instance;
+        if (_meditationSystem != null && _meditationSystem.IsPlayerMeditating)
+        {
+            _targetEnvironmentVolume = 0f;
+            _targetAmbientVolume = 0f;
+        }
+
+        EnvironmentVolume = Mathf.MoveTowards(EnvironmentVolume, _targetEnvironmentVolume, GameTime.DeltaTime(TimeChannel.Player));
+        AmbientVolume = Mathf.MoveTowards(AmbientVolume, _targetAmbientVolume, GameTime.DeltaTime(TimeChannel.Player));
+        MeditationVolume = Mathf.MoveTowards(MeditationVolume, _targetMeditationVolume, GameTime.DeltaTime(TimeChannel.Player));
     }
 
     public enum AudioChannel

@@ -23,6 +23,8 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     [Space]
     [SerializeField, Min(0f)] private float m_jumpVelocity = 2f;
     [SerializeField] private float m_jumpCooldownTime = 1f;
+    [Space]
+    [SerializeField] private float m_rotateSpeed = 3f;
 
     [Header("Object References")]
     [SerializeField] private InputActionReference m_moveActionRef = null;
@@ -167,29 +169,24 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         updateCharacterForwardDirection(_moveInput);
     }
 
+    private Vector2 m_previousRotationInput = Vector2.zero;
+
     private void updateCharacterForwardDirection(Vector2 moveInput)
     {
-        var _velocity = m_characterController.velocity;
+        if (m_playerCharacter.AllowMovement == false)
+            return;
 
-        if (m_characterController.isGrounded && m_standingOnMinecart != null)
-            _velocity -= GameTimeManager.Instance.EnvironmentTimeScale * m_standingOnMinecart.GetVelocity();
+        if (moveInput.magnitude >= 0.01f)
+            m_previousRotationInput = moveInput;
 
-        _velocity.y = 0f;
+        if (m_previousRotationInput == Vector2.zero)
+            return;
 
-        if (_velocity.magnitude > 0.1f)
-        {
-            Vector3 _newForward = new Vector3(_velocity.x, 0f, _velocity.z).normalized;
+        Vector3 _newForward = new Vector3(m_previousRotationInput.x, 0f, m_previousRotationInput.y).normalized;
 
-            if (_newForward != Vector3.zero)
-                transform.forward = _newForward;
-        }
-        else if (moveInput.magnitude > 0.01f)
-        {
-            Vector3 _newForward = new Vector3(moveInput.x, 0f, moveInput.y).normalized;
+        var _targetRotation = Quaternion.LookRotation(_newForward, Vector3.up);
 
-            if (_newForward != Vector3.zero)
-                transform.forward = _newForward;
-        }
+        transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, GameTime.DeltaTime(TimeChannel.Player) * m_rotateSpeed);
     }
 
     private int m_previousGroundCheckObjectID = -1;

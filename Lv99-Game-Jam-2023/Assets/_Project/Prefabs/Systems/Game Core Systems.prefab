@@ -178,8 +178,8 @@ MonoBehaviour:
   m_audioSourcePoolSize: 8
   m_audioPlayerPrefab: {fileID: 4532256870444855047, guid: 43c05d74594a3cc4f90a5b872fe34453,
     type: 3}
-  m_primaryLoopMaxVolume: 0.4
-  m_secondaryLoopMaxVolume: 0.25
+  m_primaryLoopMaxVolume: 0.15
+  m_secondaryLoopMaxVolume: 0.1
   m_minigameSuccessClips:
   - {fileID: 8300000, guid: ceb7df2f5e2781046a794942a0fb4fae, type: 3}
   - {fileID: 8300000, guid: 41c37fbaee371e04e9e418288ff9bc4f, type: 3}
@@ -596,37 +596,37 @@ PrefabInstance:
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 10.26476
+      value: -6.3071795
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 22.772427
+      value: 30.936392
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -4.2069793
+      value: -5.206141
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8821517
+      value: 0.8881711
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.4592191
+      value: 0.4574381
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.09271787
+      value: -0.038778402
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.048265867
+      value: 0.019972187
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
@@ -646,7 +646,7 @@ PrefabInstance:
     - target: {fileID: 2126817823582729006, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: field of view
-      value: 42
+      value: 45
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e31e8b00eb6fe124c870b820498a7644, type: 3}

@@ -109,7 +109,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             case AbilityTypes.Jump:
                 JumpUses--;
                 break;
-            case AbilityTypes.Melee:
+            case AbilityTypes.Pickaxe:
                 MeleeUses--;
                 break;
             case AbilityTypes.Inhale:
