@@ -12971,7 +12971,7 @@ PrefabInstance:
     - target: {fileID: 2585621459339449643, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
       propertyPath: m_Transitions.m_BlendHint
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2585621459715531202, guid: bb231d4c4c2326749abc8a75824e8dc1,
         type: 3}
