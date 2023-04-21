@@ -38,6 +38,8 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     [NonSerialized] public Vector3 InputWorldDirection = Vector3.zero;
     [NonSerialized] public float CurrentVerticalVelocity = 0f;
 
+    public float MaxMovementSpeed => m_moveSpeed;
+
     private bool m_wasGroundedPreviousFrame = false;
     private float m_jumpStartTime = 0f;
     private Vector3 m_currentHorizontalVelocity = Vector3.zero;
@@ -102,6 +104,8 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         OnJumped?.Invoke();
     }
 
+    public Vector2 CutsceneInput = Vector2.zero;
+
     private void Update()
     {
         if (m_moveActionRef == null)
@@ -131,6 +135,10 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         if (m_playerCharacter.AllowMovement == false)
             _moveInput = Vector2.zero;
+
+        var _cutsceneManager = CutsceneManager.Instance;
+        if (_cutsceneManager != null && _cutsceneManager.IsCutsceneActive)
+            _moveInput = CutsceneInput;
 
         float _deltaTime = GameTime.DeltaTime(TimeChannel.Player);
 
@@ -174,7 +182,15 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     private void updateCharacterForwardDirection(Vector2 moveInput)
     {
         if (m_playerCharacter.AllowMovement == false)
-            return;
+        {
+            var _cutsceneManager = CutsceneManager.Instance;
+
+            if (_cutsceneManager == null)
+                return;
+
+            if (_cutsceneManager.IsCutsceneActive == false)
+                return;
+        }
 
         if (moveInput.magnitude >= 0.01f)
             m_previousRotationInput = moveInput;

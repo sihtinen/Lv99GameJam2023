@@ -30,6 +30,8 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
     private PlayerMeleeComponent m_meleeComponent = null;
     private PlayerInhaleComponent m_inhaleComponent = null;
 
+    public PlayerMoveComponent MoveComponent => m_moveComponent;
+
     protected override void Awake()
     {
         base.Awake();
@@ -99,6 +101,16 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
 
             if (m_meditationLayersActive && _playerCamera != null && _playerCamera.IsAnimating() == false)
                 disableMeditationCameraLayer();
+        }
+
+        var _cutsceneManager = CutsceneManager.Instance;
+        if (_cutsceneManager != null && _cutsceneManager.IsCutsceneActive)
+        {
+            AllowMovement = false;
+            AllowJump = false;
+            AllowMelee = false;
+            AllowInhale = false;
+            AllowTimestop = false;
         }
     }
 

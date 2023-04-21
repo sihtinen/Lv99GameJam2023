@@ -131,7 +131,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (ActiveMeditationPoint.IsJumpAvailable == false)
             return;
 
-        if (context.started)
+        if (context.started && IsBreathMinigameActive == false)
             startBreathMinigame(AbilityTypes.Jump);
 
         if (context.canceled)
@@ -149,7 +149,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (ActiveMeditationPoint.IsMeleeAvailable == false)
             return;
 
-        if (context.started)
+        if (context.started && IsBreathMinigameActive == false)
             startBreathMinigame(AbilityTypes.Pickaxe);
 
         if (context.canceled)
@@ -167,7 +167,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (ActiveMeditationPoint.IsInhaleAvailable == false)
             return;
 
-        if (context.started)
+        if (context.started && IsBreathMinigameActive == false)
             startBreathMinigame(AbilityTypes.Inhale);
 
         if (context.canceled)
@@ -185,7 +185,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         if (ActiveMeditationPoint.IsTimestopAvailable == false)
             return;
 
-        if (context.started)
+        if (context.started && IsBreathMinigameActive == false)
             startBreathMinigame(AbilityTypes.Timestop);
 
         if (context.canceled)
