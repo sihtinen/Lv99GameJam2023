@@ -63,27 +63,10 @@ MonoBehaviour:
   m_Name: Light
   m_EditorClassIdentifier: 
   components:
-  - {fileID: 174576466535905096}
   - {fileID: 3363152356760860769}
   - {fileID: -3684831934212113186}
   - {fileID: 9212472451143604205}
   - {fileID: -2587057282077173621}
---- !u!114 &174576466535905096
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
-  m_Name: Tonemapping
-  m_EditorClassIdentifier: 
-  active: 1
-  mode:
-    m_OverrideState: 1
-    m_Value: 1
 --- !u!114 &3363152356760860769
 MonoBehaviour:
   m_ObjectHideFlags: 3
