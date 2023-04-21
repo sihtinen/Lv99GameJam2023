@@ -15,6 +15,9 @@ public class InputPromptCanvas : MonoBehaviour
     [SerializeField] private float m_retryPromptAppearSpeed = 5f;
     [SerializeField] private float m_retryPromptDisappearSpeed = 9f;
 
+    [Header("Object References")]
+    [SerializeField] private SceneReference m_mainMenuSceneRef = null;
+
     private Canvas m_canvas = null;
     private TMPro.TMP_Text m_meditatePromptText = null;
     private TMPro.TMP_Text m_retryPromptText = null;
@@ -88,5 +91,10 @@ public class InputPromptCanvas : MonoBehaviour
             return true;
 
         return false;
+    }
+
+    public void Button_LoadMainMenu()
+    {
+        SceneLoader.Instance?.LoadScene(m_mainMenuSceneRef);
     }
 }
