@@ -16,6 +16,8 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
 
     [NonSerialized] public bool IsInhaling = false;
     [NonSerialized] public float InhaleTime = 0f;
+    [NonSerialized] public bool InhaleCollisionFound = false;
+    [NonSerialized] public RaycastHit InhaleCollisionHit;
 
     private PlayerCharacter m_player = null;
     private PlayerMoveComponent m_moveComponent = null;
@@ -66,6 +68,8 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
 
     private void Update()
     {
+        InhaleCollisionFound = false;
+
         if (IsInhaling == false)
             return;
 
@@ -94,6 +98,8 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
         if (_hitCount == 0)
             return;
 
+        bool _inhaleTargetHit = false;
+
         for (int i = 0; i < _hitCount; i++)
         {
             var _hit = PhysicsUtility.CachedRaycastHits[i];
@@ -104,10 +110,26 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
             if (Physics.Linecast(_raycastOrigin, _hit.point + 0.1f * _hit.normal))
                 continue;
 
-            Debug.DrawLine(_raycastOrigin, _hit.point, Color.cyan);
+            if (InhaleCollisionFound == false)
+            {
+                if (Vector3.Dot(_hit.normal, Vector3.up) < 0.5f)
+                {
+                    InhaleCollisionFound = true;
+                    InhaleCollisionHit = _hit;
+                }
+            }
 
             if (_hit.transform.root.TryGetComponent(out IInhaleTarget _inhaleTarget))
+            {
                 _inhaleTarget.OnInhaleHit(playerPosition: transform.position);
+
+                if (_inhaleTargetHit == false)
+                {
+                    _inhaleTargetHit = true;
+                    InhaleCollisionFound = true;
+                    InhaleCollisionHit = _hit;
+                }
+            }
         }
     }
 }

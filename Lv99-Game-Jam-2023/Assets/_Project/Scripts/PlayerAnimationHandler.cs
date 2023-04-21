@@ -12,6 +12,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     [SerializeField] private string m_fallState = "Fall";
     [SerializeField] private string m_meleeState = "Hit";
     [SerializeField] private string m_meditateState = "Meditate";
+    [SerializeField] private string m_inhaleState = "Inhale";
 
     [Header("Input Direction Tilt Rotate Settings")]
     [SerializeField] private float m_inputLean_Forward = 10f;
@@ -25,6 +26,7 @@ public class PlayerAnimationHandler : MonoBehaviour
     private PlayerCharacter m_player = null;
     private PlayerMoveComponent m_moveComponent = null;
     private PlayerMeleeComponent m_meleeComponent = null;
+    private PlayerInhaleComponent m_inhaleComponent = null;
 
     private void Start()
     {
@@ -32,6 +34,7 @@ public class PlayerAnimationHandler : MonoBehaviour
         transform.root.TryGetComponent(out m_player);
         transform.root.TryGetComponent(out m_moveComponent);
         transform.root.TryGetComponent(out m_meleeComponent);
+        transform.root.TryGetComponent(out m_inhaleComponent);
     }
 
     private void LateUpdate()
@@ -54,6 +57,9 @@ public class PlayerAnimationHandler : MonoBehaviour
             _state = m_meleeState;
             setAnimatorTimeParameter(m_meleeComponent.MeleeTime);
         }
+
+        if (m_inhaleComponent.IsInhaling)
+            _state = m_inhaleState;
 
         var _meditationSystem = MeditationSystem.Instance;
 
