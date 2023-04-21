@@ -23,6 +23,8 @@ public class MeditationScreen : SingletonBehaviour<MeditationScreen>
     [SerializeField] private RectTransform m_abilitySelectionVerticalGroup = null;
     [SerializeField] private RectTransform m_minigameCenter = null;
     [SerializeField] private RectTransform m_minigameTarget = null;
+    [SerializeField] private List<Image> m_minigameCenterImages = new();
+    [SerializeField] private List<Image> m_minigameTargetImages = new();
 
     private float m_centeredAbilityMoveTime = 0f;
     private Vector2 m_anchorMinVelocity = Vector2.zero;
@@ -30,16 +32,11 @@ public class MeditationScreen : SingletonBehaviour<MeditationScreen>
     private Vector2 m_centeredElementStartPosition = Vector2.zero;
 
     private MeditationAbilitySelectionUIElement m_centeredAbilityElement = null;
-    private Image m_minigameCenterImage = null;
-    private Image m_minigameTargetImage = null;
     private List<MeditationAbilitySelectionUIElement> m_activeAbilitySelections = new();
     private Stack<MeditationAbilitySelectionUIElement> m_abilitySelectionPool = new();
 
     private void Start()
     {
-        m_minigameCenter.TryGetComponent(out m_minigameCenterImage);
-        m_minigameTarget.TryGetComponent(out m_minigameTargetImage);
-
         for (int i = 0; i < 8; i++)
         {
             var _newSelectionPrefab = Instantiate(m_abilitySelectionElementPrefab.gameObject, parent: m_abilitySelectionVerticalGroup);
@@ -89,8 +86,12 @@ public class MeditationScreen : SingletonBehaviour<MeditationScreen>
 
         if (_meditationSystem == null || _meditationSystem.IsBreathMinigameActive == false)
         {
-            m_minigameCenterImage.enabled = false;
-            m_minigameTargetImage.enabled = false;
+            for (int i = 0; i < m_minigameCenterImages.Count; i++)
+                m_minigameCenterImages[i].enabled = false;
+
+            for (int i = 0; i < m_minigameTargetImages.Count; i++)
+                m_minigameTargetImages[i].enabled = false;
+
             return;
         }
 
@@ -107,11 +108,23 @@ public class MeditationScreen : SingletonBehaviour<MeditationScreen>
         var _targetColor = _meditationSystem.IsMinigameSuccessWindowActive ? Color.green : Color.white;
         _targetColor.a = _meditationSystem.CurrentMinigameTime < 0.5f ? _meditationSystem.CurrentMinigameTime * 2f : 1.0f;
 
-        m_minigameCenterImage.color = _targetColor;
-        m_minigameTargetImage.color = _targetColor;
+        m_minigameCenter.sizeDelta = Vector2.LerpUnclamped(new Vector2(120, 120), new Vector2(85, 85), _minigameTimeNormalized);
 
-        m_minigameCenterImage.enabled = true;
-        m_minigameTargetImage.enabled = true;
+        for (int i = 0; i < m_minigameCenterImages.Count; i++)
+        {
+            m_minigameCenterImages[i].enabled = true;
+
+            if (i > 0)
+                m_minigameCenterImages[i].color = _targetColor;
+        }
+
+        for (int i = 0; i < m_minigameTargetImages.Count; i++)
+        {
+            m_minigameTargetImages[i].enabled = true;
+
+            if (i > 0)
+                m_minigameTargetImages[i].color = _targetColor;
+        }
     }
 
     public void Clear()

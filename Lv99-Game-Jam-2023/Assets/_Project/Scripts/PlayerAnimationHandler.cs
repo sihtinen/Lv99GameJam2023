@@ -11,8 +11,13 @@ public class PlayerAnimationHandler : MonoBehaviour
     [SerializeField] private string m_jumpState = "Jump";
     [SerializeField] private string m_fallState = "Fall";
     [SerializeField] private string m_meleeState = "Hit";
-    [SerializeField] private string m_meditateState = "Meditate";
     [SerializeField] private string m_inhaleState = "Inhale";
+    [Space]
+    [SerializeField] private string m_meditateState = "Meditate";
+    [SerializeField] private string m_meditateMeleeState = "Meditate_Melee";
+    [SerializeField] private string m_meditateJumpState = "Meditate_Jump";
+    [SerializeField] private string m_meditateInhaleState = "Meditate_Inhale";
+    [SerializeField] private string m_meditateTimestopState = "Meditate_Timestop";
 
     [Header("Input Direction Tilt Rotate Settings")]
     [SerializeField] private float m_inputLean_Forward = 10f;
@@ -64,7 +69,28 @@ public class PlayerAnimationHandler : MonoBehaviour
         var _meditationSystem = MeditationSystem.Instance;
 
         if (_meditationSystem != null && _meditationSystem.IsPlayerMeditating)
-            _state = m_meditateState;
+        {
+            if (_meditationSystem.IsBreathMinigameActive)
+            {
+                switch (_meditationSystem.CurrentBreathAbility)
+                {
+                    case AbilityTypes.Jump:
+                        _state = m_meditateJumpState;
+                        break;
+                    case AbilityTypes.Pickaxe:
+                        _state = m_meditateMeleeState;
+                        break;
+                    case AbilityTypes.Inhale:
+                        _state = m_meditateInhaleState;
+                        break;
+                    case AbilityTypes.Timestop:
+                        _state = m_meditateTimestopState;
+                        break;
+                }
+            }
+            else
+                _state = m_meditateState;
+        }
 
         setAnimationState(_state);
 
