@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class GameTimeManager : SingletonBehaviour<GameTimeManager>
 {
+    [NonSerialized] public bool IsTimestopActive = false;
+
     [NonSerialized] public float EnvironmentTimeScale = 1.0f;
     [NonSerialized] public float PlayerTimeScale = 1.0f;
 
@@ -16,11 +18,15 @@ public class GameTimeManager : SingletonBehaviour<GameTimeManager>
     {
         if (TimestopDuration > 0f)
         {
+            IsTimestopActive = true;
             TimestopDuration -= Time.deltaTime;
             EnvironmentTimeScale = TimestopTimeScale;
         }
         else
+        {
+            IsTimestopActive = false;
             EnvironmentTimeScale = 1.0f;
+        }
     }
 
     public void OnResetPuzzle()

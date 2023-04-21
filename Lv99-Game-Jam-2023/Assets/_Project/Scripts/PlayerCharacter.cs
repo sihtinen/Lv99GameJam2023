@@ -72,6 +72,14 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             AllowTimestop = false;
         }
 
+        var _gameTime = GameTimeManager.Instance;
+        if (_gameTime != null && _gameTime.IsTimestopActive)
+        {
+            AllowMelee = false;
+            AllowInhale = false;
+            AllowTimestop = false;
+        }
+
         var _meditationSystem = MeditationSystem.Instance;
         if (_meditationSystem != null && _meditationSystem.IsPlayerMeditating)
         {

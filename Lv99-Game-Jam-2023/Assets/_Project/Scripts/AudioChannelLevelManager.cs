@@ -48,7 +48,14 @@ public class AudioChannelLevelManager : SingletonBehaviour<AudioChannelLevelMana
             _targetAmbientVolume = 0f;
         }
 
-        EnvironmentVolume = Mathf.MoveTowards(EnvironmentVolume, _targetEnvironmentVolume, GameTime.DeltaTime(TimeChannel.Player));
+        var _gameTime = GameTimeManager.Instance;
+        if (_gameTime != null && _gameTime.IsTimestopActive)
+        {
+            _targetAmbientVolume = 0f;
+            _targetEnvironmentVolume = 0f;
+        }
+
+        EnvironmentVolume = Mathf.MoveTowards(EnvironmentVolume, _targetEnvironmentVolume, EnvironmentVolume < _targetEnvironmentVolume ? GameTime.DeltaTime(TimeChannel.Player) : 2f * GameTime.DeltaTime(TimeChannel.Player));
         AmbientVolume = Mathf.MoveTowards(AmbientVolume, _targetAmbientVolume, GameTime.DeltaTime(TimeChannel.Player));
         MeditationVolume = Mathf.MoveTowards(MeditationVolume, _targetMeditationVolume, GameTime.DeltaTime(TimeChannel.Player));
     }

@@ -13,6 +13,7 @@ public class PlayerTimestop : SingletonBehaviour<PlayerTimestop>
 
     [Header("Object References")]
     [SerializeField] private InputActionReference m_timeStopInputRef = null;
+    [SerializeField] private TimestopAudioPlayer m_audioPlayer = null;
 
     private PlayerCharacter m_player = null;
 
@@ -46,5 +47,8 @@ public class PlayerTimestop : SingletonBehaviour<PlayerTimestop>
         GameTimeManager.Instance?.TriggerTimeStop(duration: m_timeStopDuration, timeScale: m_timeStopTimeScale);
 
         m_player.UseAbility(AbilityTypes.Timestop);
+
+        m_audioPlayer.gameObject.SetActiveOptimized(true);
+        m_audioPlayer.Play();
     }
 }
