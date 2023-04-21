@@ -340,6 +340,7 @@ GameObject:
   - component: {fileID: 2179631260808508141}
   - component: {fileID: 4121083708471448789}
   - component: {fileID: 7563113539236214447}
+  - component: {fileID: 8777365337871976505}
   m_Layer: 0
   m_Name: torch_LOD0
   m_TagString: Untagged
@@ -412,6 +413,19 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8777365337871976505
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6347660421794016953}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.53500473, y: 1.8559158, z: 0.51853895}
+  m_Center: {x: 0.008359402, y: 0.9087008, z: 0.035186797}
 --- !u!1 &6802361430965582212
 GameObject:
   m_ObjectHideFlags: 0

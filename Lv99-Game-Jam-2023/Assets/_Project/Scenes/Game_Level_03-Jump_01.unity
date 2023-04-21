@@ -2699,6 +2699,7 @@ Transform:
   - {fileID: 1630473757}
   - {fileID: 1312732576}
   - {fileID: 252041645}
+  - {fileID: 543450651800246796}
   - {fileID: 119291808}
   - {fileID: 1034128870}
   - {fileID: 1366946113}
@@ -2706,7 +2707,6 @@ Transform:
   - {fileID: 170916117}
   - {fileID: 1363007316}
   - {fileID: 1686422335}
-  - {fileID: 543450651800246796}
   - {fileID: 284243839}
   - {fileID: 19534066}
   - {fileID: 524959750}
@@ -4649,13 +4649,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4649516099454255551, guid: f081a9cd0c610e746ba3ff87a14601dc,
         type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4649516099454255551, guid: f081a9cd0c610e746ba3ff87a14601dc,
+        type: 3}
       propertyPath: m_LocalScale.y
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4649516099454255551, guid: f081a9cd0c610e746ba3ff87a14601dc,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -44.908005
+      value: -45.13
       objectReference: {fileID: 0}
     - target: {fileID: 4649516099454255551, guid: f081a9cd0c610e746ba3ff87a14601dc,
         type: 3}
@@ -12114,7 +12119,7 @@ Transform:
   - {fileID: 319675179476911399}
   - {fileID: 6451193899025066172}
   m_Father: {fileID: 473243522}
-  m_RootOrder: 26
+  m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: -1.666, y: 0, z: -2.021}
 --- !u!4 &543450651918468576 stripped
 Transform:
