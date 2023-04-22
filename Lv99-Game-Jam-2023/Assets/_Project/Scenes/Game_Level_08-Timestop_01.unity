@@ -4456,12 +4456,12 @@ PrefabInstance:
     - target: {fileID: 1166250709637620537, guid: 8a4a44448b92b5949a38f05928e07c70,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.11
+      value: -4.153
       objectReference: {fileID: 0}
     - target: {fileID: 1166250709637620537, guid: 8a4a44448b92b5949a38f05928e07c70,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 5.62
+      value: 5.742
       objectReference: {fileID: 0}
     - target: {fileID: 1166250709637620537, guid: 8a4a44448b92b5949a38f05928e07c70,
         type: 3}
@@ -12363,6 +12363,9 @@ MonoBehaviour:
   m_textCanvasGroup: {fileID: 1179587048}
   m_inputPromptText: {fileID: 1179587045}
   m_subScreens: []
+  OnScreenBeginFadeOut:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!224 &1722472898
 RectTransform:
   m_ObjectHideFlags: 0
