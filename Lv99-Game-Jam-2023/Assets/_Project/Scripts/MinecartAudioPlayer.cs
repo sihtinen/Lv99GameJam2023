@@ -26,8 +26,13 @@ public class MinecartAudioPlayer : AudioPlayer
 
         m_volume = Mathf.Lerp(m_volume, _targetVolume, GameTime.DeltaTime(TimeChannel.Environment) * 3f);
 
-        if (m_audioSource.isPlaying == false)
+        if (m_audioSource.isPlaying == false && m_volume > 0)
+        {
+            m_audioSource.time = UnityEngine.Random.Range(0f, m_audioSource.clip.length);
             m_audioSource.Play();
+        }
+        else if (m_audioSource.isPlaying && m_volume <= 0)
+            m_audioSource.Stop();
 
         base.Update();
     }

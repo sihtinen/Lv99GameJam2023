@@ -250,6 +250,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b9a25555e0611604ebd99919480c76e8, type: 3}
   - {fileID: 8300000, guid: c5c90a256dedb5f4995f3e7c5b464e00, type: 3}
   - {fileID: 8300000, guid: 467ab297b2778534790601adc0c590c1, type: 3}
+  m_jumpStartClips:
+  - {fileID: 8300000, guid: a1ab192812a1c684fad7526f98243666, type: 3}
+  m_jumpLandingClips:
+  - {fileID: 8300000, guid: e1f287cebf29d49468b9ce8c56c4e930, type: 3}
 --- !u!1 &2894999290531596065
 GameObject:
   m_ObjectHideFlags: 0
@@ -596,37 +600,37 @@ PrefabInstance:
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.3071795
+      value: -8.978929
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 30.936392
+      value: 45.05336
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -5.206141
+      value: -28.467333
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.8881711
+      value: 0.8821517
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.4574381
+      value: 0.4592191
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.038778402
+      value: 0.09271787
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.019972187
+      value: -0.048265867
       objectReference: {fileID: 0}
     - target: {fileID: 2126817823582729005, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
@@ -646,7 +650,7 @@ PrefabInstance:
     - target: {fileID: 2126817823582729006, guid: e31e8b00eb6fe124c870b820498a7644,
         type: 3}
       propertyPath: field of view
-      value: 45
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e31e8b00eb6fe124c870b820498a7644, type: 3}
