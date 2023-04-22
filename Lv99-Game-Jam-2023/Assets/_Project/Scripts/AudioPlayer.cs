@@ -10,6 +10,7 @@ public abstract class AudioPlayer : MonoBehaviour
     [SerializeField, Range(0f, 1f)] protected float m_volume = 1.0f;
     [SerializeField] protected AudioChannelLevelManager.AudioChannel m_channel = AudioChannelLevelManager.AudioChannel.None;
     [SerializeField] protected TimeChannel m_timeChannel = TimeChannel.Environment;
+    [SerializeField] private Vector2 m_pitchRange = Vector2.one;
 
     [Header("Object References")]
     [SerializeField] protected AudioSource m_audioSource = null;
@@ -32,6 +33,7 @@ public abstract class AudioPlayer : MonoBehaviour
             if (DelayTimeRemaining <= 0f)
             {
                 IsDelayed = false;
+                m_audioSource.pitch = UnityEngine.Random.Range(m_pitchRange.x, m_pitchRange.y);
                 m_audioSource.Play();
             }
 
@@ -63,8 +65,15 @@ public abstract class AudioPlayer : MonoBehaviour
         set { m_audioSource.clip = value;}
     }
 
+    public float volume
+    {
+        get { return m_volume; }
+        set { m_volume = value; }
+    }
+
     public void Play()
     {
+        m_audioSource.pitch = UnityEngine.Random.Range(m_pitchRange.x, m_pitchRange.y);
         m_audioSource.Play();
     }
 

@@ -23,6 +23,7 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
     [Header("Object References")]
     [SerializeField] private CinemachineImpulseSource m_collisionImpulseSource = null;
+    [SerializeField] private MinecartCrashAudioPlayer m_crashAudioPlayer = null;
 
     [Header("Unity Events")]
     public UnityEvent OnResetPuzzleState = new();
@@ -335,6 +336,12 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
                 IsMoving = false;
                 InFrontObstacle = _obstacle;
                 InFrontObstacle.Collision(this);
+
+                if (m_crashAudioPlayer != null)
+                {
+                    m_crashAudioPlayer.gameObject.SetActiveOptimized(true);
+                    m_crashAudioPlayer.Play();
+                }
             }
         }
     }

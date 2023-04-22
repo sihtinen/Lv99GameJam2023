@@ -37,11 +37,13 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
     [NonSerialized] public Vector3 InputWorldDirection = Vector3.zero;
     [NonSerialized] public float CurrentVerticalVelocity = 0f;
+    [NonSerialized] public Vector2 CutsceneInput = Vector2.zero;
 
     public float MaxMovementSpeed => m_moveSpeed;
 
     private bool m_wasGroundedPreviousFrame = false;
     private float m_jumpStartTime = 0f;
+    private float m_airTime = 0f;
     private Vector3 m_currentHorizontalVelocity = Vector3.zero;
     private CharacterController m_characterController = null;
     private PlayerCharacter m_playerCharacter = null;
@@ -104,8 +106,6 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         OnJumped?.Invoke();
     }
 
-    public Vector2 CutsceneInput = Vector2.zero;
-
     private void Update()
     {
         if (m_moveActionRef == null)
@@ -113,18 +113,26 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         if (m_wasGroundedPreviousFrame == false && m_characterController.isGrounded)
         {
-            OnLanded?.Invoke();
-
-            if (CurrentVerticalVelocity < -0.5f && m_onLandingImpulseSource != null)
+            if (m_airTime > 0.4f)
             {
-                var _impulseVelocity = 0.01f * new Vector3(
-                    0f,
-                    CurrentVerticalVelocity,
-                    0f);
+                OnLanded?.Invoke();
 
-                m_onLandingImpulseSource.GenerateImpulseWithVelocity(_impulseVelocity);
+                if (CurrentVerticalVelocity < -0.5f && m_onLandingImpulseSource != null)
+                {
+                    var _impulseVelocity = 0.01f * new Vector3(
+                        0f,
+                        CurrentVerticalVelocity,
+                        0f);
+
+                    m_onLandingImpulseSource.GenerateImpulseWithVelocity(_impulseVelocity);
+                }
             }
         }
+
+        if (m_playerCharacter.AllowMovement && m_characterController.isGrounded == false)
+            m_airTime += GameTime.DeltaTime(TimeChannel.Player);
+        else
+            m_airTime = 0;
 
         var _moveInput = m_moveActionRef.action.ReadValue<Vector2>();
 

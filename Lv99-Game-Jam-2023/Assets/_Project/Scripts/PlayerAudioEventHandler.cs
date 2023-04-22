@@ -8,6 +8,7 @@ public class PlayerAudioEventHandler : MonoBehaviour
 {
     private PlayerCharacter m_player = null;
     private PlayerMeleeComponent m_meleeComponent = null;
+    private PlayerMoveComponent m_moveComponent = null;
 
     private void Awake()
     {
@@ -17,26 +18,34 @@ public class PlayerAudioEventHandler : MonoBehaviour
         TryGetComponent(out m_meleeComponent);
         m_meleeComponent.OnMeleeSwingBegin.AddListener(this.onMeleeSwingBegin);
         m_meleeComponent.OnMeleeSwingHit.AddListener(this.onMeleeSwingHit);
+
+        TryGetComponent(out m_moveComponent);
+        m_moveComponent.OnJumped.AddListener(this.onJumpStarted);
+        m_moveComponent.OnLanded.AddListener(this.onJumpLanded);
     }
 
     private void onTakeDamage()
     {
-        var _voiceAudioManager = PlayerAudioManager.Instance;
-        if (_voiceAudioManager != null)
-            _voiceAudioManager.PlayTakeDamageSound();
+        PlayerAudioManager.Instance?.PlayTakeDamageSound();
     }
 
     private void onMeleeSwingBegin()
     {
-        var _voiceAudioManager = PlayerAudioManager.Instance;
-        if (_voiceAudioManager != null)
-            _voiceAudioManager.PlayPickaxeSwingSound();
+        PlayerAudioManager.Instance?.PlayPickaxeSwingSound();
     }
 
     private void onMeleeSwingHit()
     {
-        var _voiceAudioManager = PlayerAudioManager.Instance;
-        if (_voiceAudioManager != null)
-            _voiceAudioManager.PlayPickaxeHitSound();
+        PlayerAudioManager.Instance?.PlayPickaxeHitSound();
+    }
+
+    private void onJumpStarted()
+    {
+        PlayerAudioManager.Instance?.PlayJumpStartSound();
+    }
+
+    private void onJumpLanded()
+    {
+        PlayerAudioManager.Instance?.PlayJumpLandingSound();
     }
 }
