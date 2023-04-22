@@ -7638,7 +7638,7 @@ PrefabInstance:
     - target: {fileID: 2894999291198316781, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: field of view
-      value: 45
+      value: 37
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316781, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
@@ -7648,37 +7648,37 @@ PrefabInstance:
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -17.74001
+      value: -17.74
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 12.0000105
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -22.090002
+      value: -22.06
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.89493465
+      value: -0.9129662
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.4461973
+      value: -0.40803525
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.000054475753
+      value: -0.000049816736
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.00010931421
+      value: 0.0001114634
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97474177420d58649abb17a956bb0380, type: 3}

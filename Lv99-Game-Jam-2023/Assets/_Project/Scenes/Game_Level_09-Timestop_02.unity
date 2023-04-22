@@ -14982,13 +14982,13 @@ PrefabInstance:
     - target: {fileID: 7019027004969777714, guid: fc8f27d9eb815a14a8b4a4b449fe321d,
         type: 3}
       propertyPath: m_sceneToLoad.scenePath
-      value: Assets/_Project/Scenes/MainMenu.unity
+      value: Assets/_Project/Scenes/Game_Level_10-Ending.unity
       objectReference: {fileID: 0}
     - target: {fileID: 7019027004969777714, guid: fc8f27d9eb815a14a8b4a4b449fe321d,
         type: 3}
       propertyPath: m_sceneToLoad.sceneAsset
       value: 
-      objectReference: {fileID: 102900000, guid: 4e99062c9a09f8146ad91c8816eef58c,
+      objectReference: {fileID: 102900000, guid: d1a4c6829b7d3c9478032fdcfe1f958e,
         type: 3}
     - target: {fileID: 7019027004969777717, guid: fc8f27d9eb815a14a8b4a4b449fe321d,
         type: 3}
