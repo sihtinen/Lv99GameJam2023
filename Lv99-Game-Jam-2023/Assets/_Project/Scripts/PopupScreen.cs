@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Events;
 
 using TMPro;
 
@@ -25,6 +26,9 @@ public class PopupScreen : MonoBehaviour
     [SerializeField] private CanvasGroup m_textCanvasGroup = null;
     [SerializeField] private TMP_Text m_inputPromptText = null;
     [SerializeField] private List<CanvasGroup> m_subScreens = new();
+
+    [Header("Events")]
+    public UnityEvent OnScreenBeginFadeOut = new();
 
     [NonSerialized] public bool IsActive = false;
 
@@ -67,6 +71,7 @@ public class PopupScreen : MonoBehaviour
 
         if (m_subScreens.Count == 0 || m_subScreenIndex >= m_subScreens.Count - 1)
         {
+            OnScreenBeginFadeOut?.Invoke();
             m_activeCoroutine = StartCoroutine(coroutine_fadeOut());
         }
         else

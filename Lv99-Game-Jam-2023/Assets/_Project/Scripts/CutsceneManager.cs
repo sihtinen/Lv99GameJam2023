@@ -15,6 +15,7 @@ public class CutsceneManager : SingletonBehaviour<CutsceneManager>
     [SerializeField] private List<PopupScreen> m_popupScreens = new();
 
     [NonSerialized] public bool IsCutsceneActive = false;
+    [NonSerialized] public float PlayerCutsceneMovementSpeedMultiplier = 0.8f;
 
     private float m_currentPathPos;
     private CinemachineSmoothPath m_currentMovementPath = null;
@@ -56,6 +57,11 @@ public class CutsceneManager : SingletonBehaviour<CutsceneManager>
         m_currentPopupScreen.Activate();
     }
 
+    public void SetPlayerCutsceneMovementSpeed(float speed)
+    {
+
+    }
+
     private void Update()
     {
         if (IsCutsceneActive == false)
@@ -77,7 +83,7 @@ public class CutsceneManager : SingletonBehaviour<CutsceneManager>
         if (m_currentMovementPath == null)
             return;
 
-        m_currentPathPos += GameTime.DeltaTime(TimeChannel.Player) * m_playerMoveComponent.MaxMovementSpeed * 0.8f;
+        m_currentPathPos += GameTime.DeltaTime(TimeChannel.Player) * m_playerMoveComponent.MaxMovementSpeed * PlayerCutsceneMovementSpeedMultiplier;
 
         Vector3 _targetPos = m_currentMovementPath.EvaluatePositionAtUnit(m_currentPathPos, CinemachinePathBase.PositionUnits.Distance);
         Vector3 _toTargetPos = _targetPos - m_playerMoveComponent.transform.position;

@@ -18,4 +18,13 @@ public class SceneLoadTriggerArea : MonoBehaviour
 
         _sceneLoader.LoadScene(m_sceneToLoad);
     }
+
+    public void LoadNextSceneManually()
+    {
+        var _sceneLoader = SceneLoader.Instance;
+        if (_sceneLoader == null)
+            return;
+
+        _sceneLoader.LoadScene(m_sceneToLoad);
+    }
 }
