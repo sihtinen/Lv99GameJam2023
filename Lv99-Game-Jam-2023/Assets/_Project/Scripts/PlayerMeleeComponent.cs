@@ -75,6 +75,8 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
         }
     }
 
+    private static Collider[] m_tempColliders = new Collider[32];
+
     private IEnumerator coroutine_meleeAttack()
     {
         IsMeleeAttacking = true;
@@ -84,6 +86,8 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
 
         bool _hitDealt = false;
         float _timer = 0f;
+
+        Transform _hitTargetTransform = getMeleeTargetTransform();
 
         while (_timer < m_meleeDuration)
         {
@@ -97,10 +101,65 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
                 calculateHit();
                 _hitDealt = true;
             }
+            else if (MeleeTime < m_meleeHitTimeNormalized && _hitTargetTransform != null)
+            {
+                Vector3 _toTarget = _hitTargetTransform.position - transform.position;
+
+                transform.rotation = Quaternion.RotateTowards(
+                    transform.rotation,
+                    Quaternion.LookRotation(_toTarget.normalized, Vector3.up),
+                    GameTime.DeltaTime(TimeChannel.Player) * 400);
+
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+            }
         }
 
         IsMeleeAttacking = false;
         m_meleeCoroutine = null;
+    }
+
+    private List<Transform> m_possibleTransforms = new List<Transform>();
+
+    private Transform getMeleeTargetTransform()
+    {
+        int _hitCount = Physics.OverlapSphereNonAlloc(
+            position: transform.position + new Vector3(0f, 1f, 0f),
+            radius: 6.0f,
+            results: m_tempColliders,
+            layerMask: PhysicsUtility.GroundLayerMask);
+
+        for (int i = 0; i < _hitCount; i++)
+        {
+            var _coll = m_tempColliders[i];
+
+            if (m_possibleTransforms.Contains(_coll.transform.root))
+                continue;
+
+            if (_coll.transform.root.TryGetComponent(out IMeleeTarget _meleeTarget))
+                m_possibleTransforms.Add(_coll.transform.root);
+        }
+
+        float _bestScore = float.MinValue;
+        Transform _bestTransform = null;
+
+        for (int i = 0; i < m_possibleTransforms.Count; i++)
+        {
+            Vector3 _toTransform = m_possibleTransforms[i].position - transform.position;
+            float _distance = _toTransform.magnitude;
+            float _dot = Vector3.Dot(_toTransform.normalized, transform.forward);
+
+            float _score = -_distance + _dot * 2f;
+
+            if (_score > _bestScore || _bestTransform == null)
+            {
+                _bestScore = _score;
+                _bestTransform = m_possibleTransforms[i];
+            }
+        }
+
+        m_possibleTransforms.Clear();
+
+        return _bestTransform;
     }
 
     private void calculateHit()
