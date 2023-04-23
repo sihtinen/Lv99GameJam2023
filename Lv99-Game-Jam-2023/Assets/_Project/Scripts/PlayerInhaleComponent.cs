@@ -13,6 +13,8 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
 
     [Header("Object References")]
     [SerializeField] private InputActionReference m_inhaleActionRef = null;
+    [SerializeField] private InhaleAudioPlayer m_audioPlayer_Loop = null;
+    [SerializeField] private InhaleAudioPlayer m_audioPlayer_End = null;
 
     [NonSerialized] public bool IsInhaling = false;
     [NonSerialized] public float InhaleTime = 0f;
@@ -58,12 +60,15 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
             InhaleTime = 0f;
 
             m_player.UseAbility(AbilityTypes.Inhale);
+
+            m_audioPlayer_Loop.gameObject.SetActiveOptimized(true);
+            m_audioPlayer_Loop.volume = 0f;
+            m_audioPlayer_Loop.FadeIn(targetVolume: 0.7f, speed: 0.3f);
+            m_audioPlayer_Loop.Play();
         }
 
-        if (context.canceled)
-        {
-            IsInhaling = false;
-        }
+        if (IsInhaling && context.canceled)
+            endInhale();
     }
 
     private void Update()
@@ -75,7 +80,14 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
 
         if (m_moveComponent.IsGrounded == false)
         {
-            IsInhaling = false;
+            endInhale();
+            return;
+        }
+
+        var _meditationSystem = MeditationSystem.Instance;
+        if (_meditationSystem != null && _meditationSystem.IsPlayerMeditating)
+        {
+            endInhale();
             return;
         }
 
@@ -131,5 +143,15 @@ public class PlayerInhaleComponent : SingletonBehaviour<PlayerInhaleComponent>
                 }
             }
         }
+    }
+
+    private void endInhale()
+    {
+        IsInhaling = false;
+
+        m_audioPlayer_Loop.FadeOut(speed: 2f);
+        m_audioPlayer_End.volume = m_audioPlayer_Loop.volume;
+        m_audioPlayer_End.gameObject.SetActiveOptimized(true);
+        m_audioPlayer_End.Play();
     }
 }

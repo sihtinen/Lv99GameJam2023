@@ -18,6 +18,8 @@ public abstract class AudioPlayer : MonoBehaviour
     [NonSerialized] public bool IsDelayed = false;
     [NonSerialized] public float DelayTimeRemaining = 0f;
 
+    protected Coroutine m_activeCoroutine = null;
+
     protected virtual void OnDestroy()
     {
         if (m_audioSource != null && m_audioSource.isPlaying)
@@ -81,5 +83,50 @@ public abstract class AudioPlayer : MonoBehaviour
     {
         IsDelayed = true;
         DelayTimeRemaining = delayTime;
+    }
+
+    public void Stop()
+    {
+        m_audioSource.Stop();
+    }
+
+    public void FadeIn(float targetVolume, float speed)
+    {
+        if (m_activeCoroutine != null)
+            StopCoroutine(m_activeCoroutine);
+
+        m_activeCoroutine = StartCoroutine(coroutine_fadeIn(targetVolume, speed));
+    }
+
+    private IEnumerator coroutine_fadeIn(float targetVolume, float speed)
+    {
+        while (m_volume < targetVolume)
+        {
+            yield return null;
+            m_volume += speed * GameTime.DeltaTime(m_timeChannel);
+        }
+
+        m_volume = targetVolume;
+        m_activeCoroutine = null;
+    }
+
+    public void FadeOut(float speed)
+    {
+        if (m_activeCoroutine != null)
+            StopCoroutine(m_activeCoroutine);
+
+        m_activeCoroutine = StartCoroutine(coroutine_fadeOut(speed));
+    }
+
+    private IEnumerator coroutine_fadeOut(float speed)
+    {
+        while (m_volume > 0f)
+        {
+            yield return null;
+            m_volume -= speed * GameTime.DeltaTime(m_timeChannel);
+        }
+
+        m_audioSource.Stop();
+        m_activeCoroutine = null;
     }
 }

@@ -106,6 +106,10 @@ public class MeditationScreen : SingletonBehaviour<MeditationScreen>
             Mathf.LerpUnclamped(_minigameSettings.CenterOffset.y, 0f, _posY));
 
         var _targetColor = _meditationSystem.IsMinigameSuccessWindowActive ? Color.green : Color.white;
+
+        if (_meditationSystem.CurrentMinigameTime > _meditationSystem.CurrentMinigameSettings.Duration + _meditationSystem.MinigameSuccessWindowHalf)
+            _targetColor = Color.red;
+
         _targetColor.a = _meditationSystem.CurrentMinigameTime < 0.5f ? _meditationSystem.CurrentMinigameTime * 2f : 1.0f;
 
         m_minigameCenter.sizeDelta = Vector2.LerpUnclamped(new Vector2(120, 120), new Vector2(85, 85), _minigameTimeNormalized);

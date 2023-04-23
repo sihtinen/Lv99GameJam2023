@@ -22,6 +22,9 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [Space]
     [SerializeField] private BreathMinigameCollection m_jumpMinigameCollection = null;
     [SerializeField] private BreathMinigameCollection m_meleeMinigameCollection = null;
+    [Space]
+    [SerializeField] private BreathMinigameAudioPlayer m_audioPlayerBreathIn = null;
+    [SerializeField] private BreathMinigameAudioPlayer m_audioPlayerBreathOut = null;
 
     [NonSerialized] public bool IsPlayerMeditating = false;
     [NonSerialized] public bool IsBreathMinigameActive = false;
@@ -33,6 +36,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [NonSerialized] public BreathMinigameSettings CurrentMinigameSettings = null;
 
     private int m_abilitiesSelected = 0;
+
+    public float MinigameSuccessWindowHalf => m_minigameSuccessWindowHalf;
 
     protected override void Awake()
     {
@@ -118,7 +123,7 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
 
             IsMinigameSuccessWindowActive = Mathf.Abs(CurrentMinigameSettings.Duration - CurrentMinigameTime) < m_minigameSuccessWindowHalf;
 
-            if (CurrentMinigameTime > CurrentMinigameSettings.Duration + m_minigameSuccessWindowHalf)
+            if (CurrentMinigameTime > CurrentMinigameSettings.Duration + m_minigameSuccessWindowHalf * 2f)
                 endBreathMinigame();
         }
     }
@@ -314,6 +319,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         }
 
         MeditationScreen.Instance?.OnBreathMinigameStarted(CurrentBreathAbility);
+
+        m_audioPlayerBreathIn.PlayBreathIn();
     }
 
     private void endBreathMinigame()
@@ -349,6 +356,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
         MeditationScreen.Instance?.OnMinigameEnded(IsMinigameSuccessWindowActive);
 
         MeditationAudioManager.Instance?.OnMinigameEnded(IsMinigameSuccessWindowActive);
+
+        m_audioPlayerBreathIn.PlayBreathOut();
 
         if (m_abilitiesSelected >= ActiveMeditationPoint.AbilityCount)
             exitMeditation();
