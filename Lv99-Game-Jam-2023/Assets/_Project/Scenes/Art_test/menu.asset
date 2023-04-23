@@ -15,10 +15,10 @@ MonoBehaviour:
   active: 1
   threshold:
     m_OverrideState: 1
-    m_Value: 1
+    m_Value: 0.25
   intensity:
     m_OverrideState: 1
-    m_Value: 0.3
+    m_Value: 0.43
   scatter:
     m_OverrideState: 0
     m_Value: 0.7
@@ -41,22 +41,6 @@ MonoBehaviour:
   dirtIntensity:
     m_OverrideState: 0
     m_Value: 0
---- !u!114 &-4134262190484128775
-MonoBehaviour:
-  m_ObjectHideFlags: 3
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 97c23e3b12dc18c42a140437e53d3951, type: 3}
-  m_Name: Tonemapping
-  m_EditorClassIdentifier: 
-  active: 1
-  mode:
-    m_OverrideState: 1
-    m_Value: 1
 --- !u!114 &-2365260948632148936
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -144,7 +128,6 @@ MonoBehaviour:
   m_Name: menu
   m_EditorClassIdentifier: 
   components:
-  - {fileID: -4134262190484128775}
   - {fileID: -4500412173465463982}
   - {fileID: 5921679253343308835}
   - {fileID: -2365260948632148936}
@@ -200,7 +183,7 @@ MonoBehaviour:
     m_Value: 0
   saturation:
     m_OverrideState: 1
-    m_Value: 5
+    m_Value: 8
 --- !u!114 &8226052685005643542
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -219,10 +202,10 @@ MonoBehaviour:
     m_Value: {x: 0.83999825, y: 0.9399443, z: 1, w: 0}
   midtones:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.9783217, z: 0.8973264, w: 0.06177606}
+    m_Value: {x: 1, y: 0.9783217, z: 0.8973264, w: 0.07800983}
   highlights:
     m_OverrideState: 1
-    m_Value: {x: 1, y: 0.97590315, z: 0.9273246, w: 0.12355212}
+    m_Value: {x: 0.88582796, y: 0.97661054, z: 1, w: 0.058617063}
   shadowsStart:
     m_OverrideState: 0
     m_Value: 0
