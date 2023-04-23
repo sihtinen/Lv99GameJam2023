@@ -1323,7 +1323,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Dwelling Deep
+  m_text: Delving Deep
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 524edbfa5a2f561479df943af0aeb427, type: 2}
   m_sharedMaterial: {fileID: -1416354476613959375, guid: 524edbfa5a2f561479df943af0aeb427,
