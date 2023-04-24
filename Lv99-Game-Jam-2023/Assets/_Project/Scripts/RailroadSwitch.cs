@@ -49,6 +49,9 @@ public class RailroadSwitch : PuzzleBehaviour, IMeleeTarget, IInhaleTarget
         }
 
         updatePathStates();
+
+        m_audioPlayer.gameObject.SetActiveOptimized(true);
+        m_audioPlayer.Play();
     }
 
     private void Update()
