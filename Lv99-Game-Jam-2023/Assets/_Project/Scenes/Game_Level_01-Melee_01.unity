@@ -18268,7 +18268,7 @@ PrefabInstance:
     - target: {fileID: 2894999291198316781, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: field of view
-      value: 27.02915
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316781, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
@@ -18278,37 +18278,37 @@ PrefabInstance:
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -9.09
+      value: -7.537647
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.58
+      value: 7.8557606
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.23
+      value: -4.495384
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: -0.8964888
+      value: 0.9125933
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.031218037
+      value: 0.4078746
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0.44177923
+      value: -0.026045796
       objectReference: {fileID: 0}
     - target: {fileID: 2894999291198316782, guid: 97474177420d58649abb17a956bb0380,
         type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.012826318
+      value: 0.011551597
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 97474177420d58649abb17a956bb0380, type: 3}
