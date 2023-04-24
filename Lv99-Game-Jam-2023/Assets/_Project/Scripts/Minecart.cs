@@ -314,7 +314,12 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.root.TryGetComponent(out IMinecartObstacle _obstacle) == false)
+        var _rootTransform = other.transform.root;
+
+        if (_rootTransform.TryGetComponent(out PlayerCharacter _player))
+            _player.OnEnteredMinecart(this);
+
+        if (_rootTransform.TryGetComponent(out IMinecartObstacle _obstacle) == false)
             return;
 
         if (_obstacle.IsActive() == false)
@@ -344,6 +349,14 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
                 }
             }
         }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        var _rootTransform = other.transform.root;
+
+        if (_rootTransform.TryGetComponent(out PlayerCharacter _player))
+            _player.OnLeftMinecart(this);
     }
 
     bool IMinecartObstacle.IsActive()

@@ -23,6 +23,7 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
     [Space]
     [SerializeField, Min(0f)] private float m_jumpVelocity = 2f;
     [SerializeField] private float m_jumpCooldownTime = 1f;
+    [SerializeField] private float m_jumpCoyoteTime = 0.25f;
     [Space]
     [SerializeField] private float m_rotateSpeed = 3f;
 
@@ -91,7 +92,7 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         if (m_playerCharacter.AllowJump == false)
             return;
 
-        if (m_characterController.isGrounded == false)
+        if (m_characterController.isGrounded == false && m_airTime > m_jumpCoyoteTime)
             return;
 
         float _timePassed = Time.time - m_jumpStartTime;
@@ -167,20 +168,16 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
         Vector3 _moveVelocity = m_currentHorizontalVelocity + new Vector3(0f, CurrentVerticalVelocity, 0f);
 
-        if (m_characterController.isGrounded && m_standingOnMinecart != null)
+        var _currentMinecart = m_playerCharacter.CurrentMinecart;
+
+        if (m_airTime <= m_jumpCoyoteTime && _currentMinecart != null)
         {
-            var _minecartVelocity = m_standingOnMinecart.GetVelocity();
-            _moveVelocity += GameTimeManager.Instance.EnvironmentTimeScale * _minecartVelocity;
+            if (transform.position.y - _currentMinecart.transform.position.y > 1.0f)
+                _moveVelocity += GameTimeManager.Instance.EnvironmentTimeScale * _currentMinecart.GetVelocity();
         }
 
         m_wasGroundedPreviousFrame = m_characterController.isGrounded;
         m_characterController.Move(_deltaTime * _moveVelocity);
-
-        if (m_characterController.isGrounded == false)
-        {
-            m_previousGroundCheckObjectID = -1;
-            m_standingOnMinecart = null;
-        }
 
         updateCharacterForwardDirection(_moveInput);
     }
@@ -220,28 +217,6 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
         transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, GameTime.DeltaTime(TimeChannel.Player) * m_rotateSpeed);
     }
 
-    private int m_previousGroundCheckObjectID = -1;
-    private Minecart m_standingOnMinecart = null;
-
-    private void OnControllerColliderHit(ControllerColliderHit hit)
-    {
-        if (hit.collider == null)
-        {
-            m_previousGroundCheckObjectID = -1;
-            m_standingOnMinecart = null;
-            return;
-        }
-
-        int _id = hit.transform.root.GetInstanceID();
-
-        if (_id == m_previousGroundCheckObjectID)
-            return;
-
-        m_previousGroundCheckObjectID = _id;
-
-        hit.transform.root.TryGetComponent(out m_standingOnMinecart);
-    }
-
     public bool IsGrounded => m_characterController.isGrounded;
     public bool IsRunning
     {
@@ -252,8 +227,8 @@ public class PlayerMoveComponent : SingletonBehaviour<PlayerMoveComponent>
 
             Vector3 _vel = m_characterController.velocity;
 
-            if (m_standingOnMinecart != null)
-                _vel -= m_standingOnMinecart.GetVelocity();
+            if (m_playerCharacter.CurrentMinecart != null)
+                _vel -= m_playerCharacter.CurrentMinecart.GetVelocity();
 
             return _vel.sqrMagnitude > 0.7f;
         }

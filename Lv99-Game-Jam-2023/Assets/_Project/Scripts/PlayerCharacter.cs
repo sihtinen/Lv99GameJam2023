@@ -24,6 +24,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
     [NonSerialized] public int MeleeUses = 0;
     [NonSerialized] public int InhaleUses = 0;
     [NonSerialized] public int TimestopUses = 0;
+    [NonSerialized] public Minecart CurrentMinecart = null;
 
     private bool m_meditationLayersActive = false;
     private PlayerMoveComponent m_moveComponent = null;
@@ -88,6 +89,7 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
             AllowMelee = false;
             AllowInhale = false;
             AllowTimestop = false;
+            CurrentMinecart = null;
 
             if (m_meditationLayersActive == false)
                 enableMeditationCameraLayer();
@@ -175,5 +177,16 @@ public class PlayerCharacter : SingletonBehaviour<PlayerCharacter>
     public void TakeDamage()
     {
         OnTakeDamage?.Invoke();
+    }
+
+    public void OnEnteredMinecart(Minecart minecart)
+    {
+        CurrentMinecart = minecart;
+    }
+
+    public void OnLeftMinecart(Minecart minecart)
+    {
+        if (CurrentMinecart == minecart)
+            CurrentMinecart = null;
     }
 }
