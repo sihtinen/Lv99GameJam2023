@@ -8,6 +8,7 @@ public class BreakableObject : PuzzleBehaviour, IMeleeTarget
     [SerializeField] private GameObject m_visualObject = null;
     [SerializeField] private Collider m_collider = null;
     [SerializeField] private BreakableObjectAudioPlayer m_audioPlayer = null;
+    [SerializeField] private ParticleSystem m_breakParticles = null;
 
     public void OnHit(Vector3 playerPosition)
     {
@@ -22,6 +23,9 @@ public class BreakableObject : PuzzleBehaviour, IMeleeTarget
             m_audioPlayer.gameObject.SetActiveOptimized(true);
             m_audioPlayer.Play();
         }
+
+        if (m_breakParticles != null)
+            m_breakParticles.Play(withChildren: true);
     }
 
     public override void ResetPuzzleState()
