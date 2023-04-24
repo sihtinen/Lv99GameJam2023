@@ -19,6 +19,9 @@ public class RailroadSwitch : PuzzleBehaviour, IMeleeTarget, IInhaleTarget
 
     private SwitchDirection m_currentDirection = SwitchDirection.Left;
 
+    public Transform RootTransform => transform;
+    public MeleeHitParticlesType HitParticlesType => MeleeHitParticlesType.Metal;
+
     private void Start()
     {
         ResetPuzzleState();

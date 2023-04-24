@@ -16,8 +16,12 @@ public class LogBridge : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle, IInha
     [SerializeField] private LogBridgeAudioPlayer m_audioPlayer = null;
     [SerializeField] private List<LogBridgeBone> m_bonePieces = new();
 
+    public MeleeHitParticlesType HitParticlesType => MeleeHitParticlesType.None;
+
     private int m_currentHealth;
     private FractureDirection m_fractureDirection;
+
+    public Transform RootTransform => transform;
 
     Vector3 IMinecartObstacle.Position => transform.position;
 

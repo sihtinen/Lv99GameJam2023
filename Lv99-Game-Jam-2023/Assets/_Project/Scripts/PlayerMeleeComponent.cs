@@ -25,6 +25,7 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
     [Header("Object References")]
     [SerializeField] private InputActionReference m_meleeActionRef = null;
     [SerializeField] private CinemachineImpulseSource m_meleeHitImpulseSource = null;
+    [SerializeField] private ParticleSystem m_metalHitParticles = null;
 
     [Header("Events")]
     public UnityEvent OnMeleeSwingBegin = new();
@@ -43,6 +44,8 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
 
         TryGetComponent(out m_playerCharacter);
         TryGetComponent(out m_moveComponent);
+
+        m_metalHitParticles.transform.SetParent(null);
 
         if (m_meleeActionRef != null)
         {
@@ -87,7 +90,7 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
         bool _hitDealt = false;
         float _timer = 0f;
 
-        Transform _hitTargetTransform = getMeleeTargetTransform();
+        var _hitTarget = getMeleeTargetTransform();
 
         while (_timer < m_meleeDuration)
         {
@@ -99,11 +102,12 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
             if (_hitDealt == false && MeleeTime >= m_meleeHitTimeNormalized)
             {
                 calculateHit();
+
                 _hitDealt = true;
             }
-            else if (MeleeTime < m_meleeHitTimeNormalized && _hitTargetTransform != null)
+            else if (MeleeTime < m_meleeHitTimeNormalized && _hitTarget != null)
             {
-                Vector3 _toTarget = _hitTargetTransform.position - transform.position;
+                Vector3 _toTarget = _hitTarget.RootTransform.position - transform.position;
 
                 transform.rotation = Quaternion.RotateTowards(
                     transform.rotation,
@@ -118,48 +122,60 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
         m_meleeCoroutine = null;
     }
 
-    private List<Transform> m_possibleTransforms = new List<Transform>();
+    private List<IMeleeTarget> m_possibleTransforms = new List<IMeleeTarget>();
 
-    private Transform getMeleeTargetTransform()
+    private IMeleeTarget getMeleeTargetTransform()
     {
         int _hitCount = Physics.OverlapSphereNonAlloc(
             position: transform.position + new Vector3(0f, 1f, 0f),
-            radius: 6.0f,
+            radius: 4.0f,
             results: m_tempColliders,
-            layerMask: PhysicsUtility.GroundLayerMask);
+            layerMask: Physics.AllLayers);
 
         for (int i = 0; i < _hitCount; i++)
         {
             var _coll = m_tempColliders[i];
 
-            if (m_possibleTransforms.Contains(_coll.transform.root))
-                continue;
-
-            if (_coll.transform.root.TryGetComponent(out IMeleeTarget _meleeTarget))
-                m_possibleTransforms.Add(_coll.transform.root);
+            if (_coll.TryGetComponent(out IMeleeTarget _meleeTarget))
+            {
+                if (m_possibleTransforms.Contains(_meleeTarget) == false)
+                    m_possibleTransforms.Add(_meleeTarget);
+            }
         }
 
         float _bestScore = float.MinValue;
-        Transform _bestTransform = null;
+        IMeleeTarget _bestTarget = null;
 
         for (int i = 0; i < m_possibleTransforms.Count; i++)
         {
-            Vector3 _toTransform = m_possibleTransforms[i].position - transform.position;
+            var _targetTransform = m_possibleTransforms[i].RootTransform;
+
+            Vector3 _toTransform = _targetTransform.position - transform.position;
             float _distance = _toTransform.magnitude;
             float _dot = Vector3.Dot(_toTransform.normalized, transform.forward);
 
             float _score = -_distance + _dot * 2f;
 
-            if (_score > _bestScore || _bestTransform == null)
+            if (_score > _bestScore || _bestTarget == null)
             {
                 _bestScore = _score;
-                _bestTransform = m_possibleTransforms[i];
+                _bestTarget = m_possibleTransforms[i];
             }
         }
 
         m_possibleTransforms.Clear();
 
-        return _bestTransform;
+        return _bestTarget;
+    }
+
+    private Vector3 getClosestHit(Transform target)
+    {
+        Vector3 _hitOrigin = transform.position + new Vector3(0f, 1f, 0f);
+
+        if (target.TryGetComponent(out Collider coll))
+            return coll.ClosestPoint(_hitOrigin);
+
+        return target.transform.position + new Vector3(0f, 1f, 0f);
     }
 
     private void calculateHit()
@@ -199,6 +215,21 @@ public class PlayerMeleeComponent : SingletonBehaviour<PlayerMeleeComponent>
             {
                 _meleeTarget.OnHit(playerPosition: transform.position);
                 _hitValidTarget = true;
+
+                if (_meleeTarget != null)
+                {
+                    switch (_meleeTarget.HitParticlesType)
+                    {
+                        case MeleeHitParticlesType.Metal:
+
+                            Vector3 _particlesPos = getClosestHit(_meleeTarget.RootTransform);
+                            m_metalHitParticles.transform.position = _particlesPos;
+                            m_metalHitParticles.transform.forward = (transform.position - _particlesPos).normalized;
+                            m_metalHitParticles.Play();
+
+                            break;
+                    }
+                }
             }
         }
 

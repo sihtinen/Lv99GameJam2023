@@ -41,14 +41,19 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
     [NonSerialized] IMinecartObstacle InFrontObstacle = null;
 
+    public Transform RootTransform => transform;
+    public MeleeHitParticlesType HitParticlesType => MeleeHitParticlesType.Metal;
+
     private bool m_isPathReversed = false;
     private bool m_wasHitByPlayer = false;
     private BoxCollider m_boxCollider = null;
+    private Rigidbody m_rigidbody = null;
     private List<Railroad> m_collidedRailroads = new List<Railroad>();
 
     private void Awake()
     {
         TryGetComponent(out m_boxCollider);
+        TryGetComponent(out m_rigidbody);
 
         InitialState.Position = transform.position;
         InitialState.Rotation = transform.rotation;
@@ -60,6 +65,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
     {
         transform.position = InitialState.Position;
         transform.rotation = InitialState.Rotation;
+
+        m_rigidbody.WakeUp();
 
         InFrontObstacle = null;
 
