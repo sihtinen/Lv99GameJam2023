@@ -22,6 +22,8 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
     [Space]
     [SerializeField] private BreathMinigameCollection m_jumpMinigameCollection = null;
     [SerializeField] private BreathMinigameCollection m_meleeMinigameCollection = null;
+    [SerializeField] private BreathMinigameCollection m_inhaleMinigameCollection = null;
+    [SerializeField] private BreathMinigameCollection m_timestopMinigameCollection = null;
     [Space]
     [SerializeField] private BreathMinigameAudioPlayer m_audioPlayerBreathIn = null;
     [SerializeField] private BreathMinigameAudioPlayer m_audioPlayerBreathOut = null;
@@ -311,10 +313,10 @@ public class MeditationSystem : SingletonBehaviour<MeditationSystem>
                 CurrentMinigameSettings = m_meleeMinigameCollection.AvailableMinigames.GetRandomElement();
                 break;
             case AbilityTypes.Inhale:
-                CurrentMinigameSettings = m_jumpMinigameCollection.AvailableMinigames.GetRandomElement();
+                CurrentMinigameSettings = m_inhaleMinigameCollection.AvailableMinigames.GetRandomElement();
                 break;
             case AbilityTypes.Timestop:
-                CurrentMinigameSettings = m_jumpMinigameCollection.AvailableMinigames.GetRandomElement();
+                CurrentMinigameSettings = m_timestopMinigameCollection.AvailableMinigames.GetRandomElement();
                 break;
         }
 

@@ -215,8 +215,12 @@ MonoBehaviour:
     type: 2}
   m_meleeMinigameCollection: {fileID: 11400000, guid: 762f1e7f8d31839459aa61b696f9cd72,
     type: 2}
+  m_inhaleMinigameCollection: {fileID: 11400000, guid: 21d9da95e58906947a7e5d6450f85a85,
+    type: 2}
+  m_timestopMinigameCollection: {fileID: 11400000, guid: 45a656ac7306f3b4abf1ad375b90e77b,
+    type: 2}
   m_audioPlayerBreathIn: {fileID: 5821315279115099208}
-  m_audioPlayerBreathOut: {fileID: 0}
+  m_audioPlayerBreathOut: {fileID: 440467032441513247}
 --- !u!1 &8608318948721516786
 GameObject:
   m_ObjectHideFlags: 0
