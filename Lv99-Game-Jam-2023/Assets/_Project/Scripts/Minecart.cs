@@ -24,6 +24,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
     [Header("Object References")]
     [SerializeField] private CinemachineImpulseSource m_collisionImpulseSource = null;
     [SerializeField] private MinecartCrashAudioPlayer m_crashAudioPlayer = null;
+    [SerializeField] private BreakableObjectAudioPlayer m_hitAudioPlayer = null;
+    [SerializeField] private BreakableObjectAudioPlayer m_landedOnRailAudioPlayer = null;
 
     [Header("Unity Events")]
     public UnityEvent OnResetPuzzleState = new();
@@ -40,6 +42,7 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
     [NonSerialized] IMinecartObstacle InFrontObstacle = null;
 
     private bool m_isPathReversed = false;
+    private bool m_wasHitByPlayer = false;
     private BoxCollider m_boxCollider = null;
     private List<Railroad> m_collidedRailroads = new List<Railroad>();
 
@@ -59,6 +62,8 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
         transform.rotation = InitialState.Rotation;
 
         InFrontObstacle = null;
+
+        m_wasHitByPlayer = false;
 
         IsMoving = InitialState.IsMoving;
         AccelerationTime = InitialState.AccelerationCurvePos * AccelerationDuration;
@@ -286,6 +291,12 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
         AccelerationTime *= 0.3f;
 
+        if (m_wasHitByPlayer && CurrentRailroad == null)
+        {
+            m_landedOnRailAudioPlayer.gameObject.SetActiveOptimized(true);
+            m_landedOnRailAudioPlayer.Play();
+        }
+
         IsOnRailroad = true;
         CurrentRailroad = _closestRailroad;
         CurrentPath = CurrentRailroad.GetOpenPath();
@@ -294,11 +305,16 @@ public class Minecart : PuzzleBehaviour, IMeleeTarget, IMinecartObstacle
 
     public void OnHit(Vector3 playerPosition)
     {
-        if (IsOnRailroad)
+        if (IsOnRailroad || IsMoving)
             return;
 
         AccelerationTime = AccelerationDuration * 0.33f;
         IsMoving = true;
+
+        m_hitAudioPlayer.gameObject.SetActiveOptimized(true);
+        m_hitAudioPlayer.Play();
+
+        m_wasHitByPlayer = true;
     }
 
     public Vector3 GetVelocity()
